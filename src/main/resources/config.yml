@@ -1,0 +1,28 @@
+Crates:
+  TestCrate:
+    HologramName: 'Test Crate'
+    Block: CHEST
+    Floor: NETHERRITE
+    Key:
+      Item: TRIPWIRE_HOOK
+      Name: 'KEY CHEST!'
+      Lore:
+      - 'This is the key chest'
+    Items:
+      '1':
+        Type: ITEM
+        Item: DIAMOND
+        Name: 'AMAZING DIAMOND'
+        Amount: 5
+        Percentage: 20
+        Lore:
+          - 'This is the perfect diamond'
+      '2':
+        Type: CMD
+        Item: IRON_ORE
+        Name: 'Omg command'
+        Percentage: 20
+        Lore:
+          - 'Insane cmd'
+        Commands:
+          - 'give %player% DIAMOND 20'

@@ -1,0 +1,6 @@
+name: CCrates
+version: '${project.version}'
+main: kyriakum.ccrates.ccrates.CCrates
+api-version: 1.19
+commands:
+  ccrates:

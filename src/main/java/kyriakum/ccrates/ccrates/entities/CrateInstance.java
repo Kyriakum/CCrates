@@ -1,0 +1,54 @@
+package kyriakum.ccrates.ccrates.entities;
+
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
+public class CrateInstance {
+
+    private Crate crate;
+    private Location location;
+    private CrateState state;
+    private CrateRunning running;
+    private int id;
+
+    public CrateInstance(Crate crate, Location location, int id){
+        this.crate = crate;
+        this.location = location;
+        this.state = CrateState.ENABLED;
+        this.id = id;
+    }
+
+    public void startCrate(Player player){
+        running = new CrateRunning(player, this);
+        state = CrateState.IN_USE;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public Crate getCrate() {
+        return crate;
+    }
+
+    public CrateState getState() {
+        return state;
+    }
+
+    public void setState(CrateState state) {
+        this.state = state;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public boolean isRunning(){
+        if(state==CrateState.IN_USE) return true;
+        return false;
+    }
+
+    public CrateRunning getCrateRunning() {
+        return running;
+    }
+}
