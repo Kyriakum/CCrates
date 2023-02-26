@@ -51,7 +51,7 @@ public class Crate {
         return contents;
     }
 
-    protected CCrates getCCrates(){
+    public CCrates getCCrates(){
         return cCrates;
     }
 }
