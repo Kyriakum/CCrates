@@ -24,21 +24,26 @@ public class CrateRunning extends BukkitRunnable {
     private Player player;
     private CrateInstance instance;
     private Map<Location, Material> blocks;
-    private final int SECONDS = 20;
+    public final int SECONDS = 20;
     private int counter = 0;
     private final BlockFace mainChestFace;
+    private List<CrateEntity> entities;
     private Location pos1;
     private Location pos2;
+    private Location playerLocation;
 
     private CrateOpeningListener listener;
 
 
     public CrateRunning(Player player, CrateInstance instance){
         this.player = player;
+        playerLocation = player.getLocation();
         this.instance = instance;
         Directional directional = (Directional) instance.getLocation().getBlock().getBlockData();
         mainChestFace = directional.getFacing();
         blocks = new HashMap<>();
+        entities = new ArrayList<>();
+        setChestEntities();
         pos1 = instance.getLocation().clone().add(-3,-1,-3);
         pos2 = instance.getLocation().clone().add(3,-1,3);
         listener = new CrateOpeningListener(instance.getCrate().getCCrates(), this);
@@ -54,18 +59,21 @@ public class CrateRunning extends BukkitRunnable {
             fillRegion(pos1,pos2,instance.getCrate().getFloor());
             clipCorners(pos1,pos2);
         } else if(counter<=6){
-            spawnChest(counter);
+            entities.get(counter%4).spawn();
         } else if(counter==7) {
             counter++;
             cancel();
             return;
-        } else {
+        } else{
             resetArea();
             return;
         }
         counter++;
     }
 
+    public void restart(){
+        runTaskLater(instance.getCrate().getCCrates(), SECONDS*3);
+    }
     public void start(){
         listAllBlocks(pos1,pos2);
         instance.getLocation().getBlock().setType(Material.AIR);
@@ -110,21 +118,18 @@ public class CrateRunning extends BukkitRunnable {
         return player;
     }
 
-    public boolean isChestBlock(Location loc){
-        for(Location location : chestLocations()){
-            System.out.println(loc + "\n" + location);
-            if(loc.equals(new Location(location.getWorld(),location.getBlockX(),location.getBlockY(),location.getBlockZ()))) return true;
+    public CrateEntity getChestBlock(Location loc){
+        for(CrateEntity entity : entities){
+            if(loc.equals(entity.getLocation())) return entity;
         }
-        return false;
+        return null;
     }
 
-    private List<Location> chestLocations(){
-        List<Location> locs = new ArrayList<>();
-        locs.add(instance.getLocation().clone().subtract(3,0,0));
-        locs.add(instance.getLocation().clone().subtract(0,0,3));
-        locs.add(instance.getLocation().clone().add(3,0,0));
-        locs.add(instance.getLocation().clone().add(0,0,3));
-    return locs;
+    private void setChestEntities(){
+        entities.add(new CrateEntity(instance.getLocation().clone().subtract(3,0,0).getBlock().getLocation(), BlockFace.EAST, this));
+        entities.add(new CrateEntity(instance.getLocation().clone().subtract(0,0,3).getBlock().getLocation(), BlockFace.SOUTH, this));
+        entities.add(new CrateEntity(instance.getLocation().clone().add(3,0,0).getBlock().getLocation(), BlockFace.WEST, this));
+        entities.add(new CrateEntity(instance.getLocation().clone().add(0,0,3).getBlock().getLocation(), BlockFace.NORTH, this));
     }
 
     public CrateInstance getInstance() {
@@ -135,50 +140,41 @@ public class CrateRunning extends BukkitRunnable {
         return counter;
     }
 
-    public void spawnChest(int mod){
-        int value = mod%4;
-        Block block = chestLocations().get(value).getBlock();
-        block.setType(instance.getCrate().getBlock());
-        Directional direction = (Directional) block.getBlockData();
-        BlockFace face;
-        switch (value){
-            case 0: {
-                face = BlockFace.EAST;
-                break;
-            }
-            case 1: {
-                face = BlockFace.SOUTH;
-                break;
-            }
-            case 2: {
-                face = BlockFace.WEST;
-            break;
-            }
-            default: face = BlockFace.NORTH;
-            break;
-        }
-        direction.setFacing(face);
-        block.setBlockData(direction);
-    }
 
     public void resetArea(){
+        if(player.isOnline()) player.teleport(playerLocation);
         for(Location loc : blocks.keySet()){
             loc.getBlock().setType(blocks.get(loc));
             loc.getWorld().spawnParticle(Particle.DRAGON_BREATH,loc,0,0,0,0);
         }
 
-        for(Location loc : chestLocations()){
-            loc.getBlock().setType(Material.AIR);
-            loc.getWorld().spawnParticle(Particle.ITEM_CRACK,loc,0,0,0,0, new ItemStack(instance.getCrate().getBlock()));
-        }
+       entities.forEach(CrateEntity::despawn);
 
-        instance.getLocation().getBlock().setType(instance.getCrate().getBlock());
-        Directional dir = (Directional) instance.getLocation().getBlock().getBlockData();
-        dir.setFacing(mainChestFace);
-        instance.getLocation().getBlock().setBlockData(dir);
+        setMainBlock();
+
         instance.setState(CrateState.ENABLED);
 
         HandlerList.unregisterAll(listener);
         cancel();
+    }
+
+    private void setMainBlock(){
+        instance.getLocation().getBlock().setType(instance.getCrate().getBlock());
+        Directional dir = (Directional) instance.getLocation().getBlock().getBlockData();
+        dir.setFacing(mainChestFace);
+        instance.getLocation().getBlock().setBlockData(dir);
+
+    }
+
+
+    protected Map<Location, Material> getBlocks() {
+        return blocks;
+    }
+
+    public boolean allOpened(){
+        for(CrateEntity entity : entities){
+            if(!entity.isOpened()) return false;
+        }
+        return true;
     }
 }

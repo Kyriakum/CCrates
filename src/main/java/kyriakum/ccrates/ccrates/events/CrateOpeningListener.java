@@ -1,11 +1,13 @@
 package kyriakum.ccrates.ccrates.events;
 
 import kyriakum.ccrates.ccrates.CCrates;
+import kyriakum.ccrates.ccrates.entities.CrateEntity;
 import kyriakum.ccrates.ccrates.entities.CrateInstance;
 import kyriakum.ccrates.ccrates.entities.CrateRunning;
 import kyriakum.ccrates.ccrates.entities.contents.Content;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.network.protocol.game.PacketPlayOutBlockAction;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -40,13 +42,18 @@ public class CrateOpeningListener implements Listener {
     @EventHandler
     public void OpeningListener(PlayerInteractEvent e){
         Player p = e.getPlayer();
+
         if(!p.equals(running.getPlayer())) return;
 
-        if(running.getCounter()<7);
-        else if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock()!=null && running.isChestBlock(e.getClickedBlock().getLocation())){
+        if(running.getCounter()<7) { e.setCancelled(true); return; }
+
+        CrateEntity entity = running.getChestBlock(e.getClickedBlock().getLocation());
+
+        if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock()!=null && entity!=null){
             p.sendMessage(ChatColor.GREEN + "Poof!");
-            Block chest = e.getClickedBlock();
-            makeMagicOpening(chest);
+            entity.makeMagicOpening();
+            if(running.allOpened())
+                Bukkit.getScheduler().runTaskLater(cCrates, () -> running.resetArea(), 3*running.SECONDS);
         }
         e.setCancelled(true);
     }
