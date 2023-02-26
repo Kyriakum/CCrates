@@ -54,4 +54,19 @@ public class Crate {
     public CCrates getCCrates(){
         return cCrates;
     }
+
+    public void addContent(Content content){
+        contents.add(content);
+    }
+
+    public Content getContent(int id){
+        for(Content content : contents){
+            if(content.getContentID()==id) return content;
+        }
+        return null;
+    }
+
+    public void removeContent(int id){
+        contents.remove(getContent(id));
+    }
 }

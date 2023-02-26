@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,4 +94,57 @@ public class ConfigManager extends FileManager {
     }
 
 
+    public void addItemContent(Crate crate, ItemStack itemStack){
+        try {
+            int id = 1;
+            while(crate.getContent(id)!=null)id++;
+
+            getConfig().set("Crates." + crate.getName() + ".Items." + String.valueOf(id) + ".Type", "ITEM");
+            getConfig().set("Crates." + crate.getName() + ".Items." + String.valueOf(id) + ".Item", itemStack.getType().name());
+            getConfig().set("Crates." + crate.getName() + ".Items." + String.valueOf(id) + ".Name", itemStack.getItemMeta().getDisplayName());
+            getConfig().set("Crates." + crate.getName() + ".Items." + String.valueOf(id) + ".Amount", itemStack.getAmount());
+            getConfig().set("Crates." + crate.getName() + ".Items." + String.valueOf(id) + ".Percentage", 20);
+            getConfig().set("Crates." + crate.getName() + ".Items." + String.valueOf(id) + ".Lore", itemStack.getItemMeta().getLore());
+
+            getConfig().save(getFile());
+
+            crate.addContent(new ItemContent(id, itemStack, 20, itemStack.getAmount()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public void addCmdContent(Crate crate, ItemStack itemStack){
+        try {
+            int id = 1;
+            while(crate.getContent(id)!=null)id++;
+
+            getConfig().set("Crates." + crate.getName() + ".Items." + id + ".Type", "CMD");
+            getConfig().set("Crates." + crate.getName() + ".Items." + id + ".Item", itemStack.getType().name());
+            getConfig().set("Crates." + crate.getName() + ".Items." + id + ".Name", itemStack.getItemMeta().getDisplayName());
+            getConfig().set("Crates." + crate.getName() + ".Items." + id + ".Percentage", 20);
+            getConfig().set("Crates." + crate.getName() + ".Items." + id + ".Lore", itemStack.getItemMeta().getLore());
+            getConfig().set("Crates." + crate.getName() + ".Items." + id + ".Commands", "");
+            getConfig().save(getFile());
+            crate.addContent(new CmdContent(id, itemStack, 20, new ArrayList<>()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean removeContent(Crate crate, int id){
+            if(crate.getContent(id)!=null) {
+                try {
+                    getConfig().set("Crates." + crate.getName() + ".Items." + id, null);
+                    getConfig().save(getFile());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                crate.removeContent(id);
+                return true;
+            }
+            return false;
+    }
 }

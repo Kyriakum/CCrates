@@ -26,6 +26,8 @@ public class CCratesCommands implements CommandExecutor {
         commands.add(new GiveKeyCommand(cCrates));
         commands.add(new ListCommand(cCrates));
         commands.add(new InfoCommand(cCrates));
+        commands.add(new AddCommand(cCrates));
+        commands.add(new RemoveCommand(cCrates));
         cCrates.getCommand("ccrates").setExecutor(this);
     }
 

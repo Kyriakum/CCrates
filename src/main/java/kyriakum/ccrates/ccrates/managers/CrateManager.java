@@ -27,5 +27,7 @@ public class CrateManager {
         return null;
     }
 
+    public void addCrate(Crate crate){
 
+    }
 }

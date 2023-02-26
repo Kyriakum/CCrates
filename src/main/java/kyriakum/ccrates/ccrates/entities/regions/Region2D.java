@@ -39,19 +39,14 @@ public class Region2D {
     }
 
     public void clipCorners(){
-
         pos1.getBlock().setType(blocks.get(pos1));
         pos2.getBlock().setType(blocks.get(pos2));
-
         Location corner3 = pos1.clone();
         corner3.setZ(pos2.getZ());
         Location corner4 = pos1.clone();
         corner4.setX(pos2.getX());
         corner3.getBlock().setType(blocks.get(corner3));
         corner4.getBlock().setType(blocks.get(corner4));
-
-
-
     }
 
     public void listAllBlocks(){

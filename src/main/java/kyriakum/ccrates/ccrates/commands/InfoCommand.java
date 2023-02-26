@@ -2,6 +2,7 @@ package kyriakum.ccrates.ccrates.commands;
 
 import kyriakum.ccrates.ccrates.CCrates;
 import kyriakum.ccrates.ccrates.entities.Crate;
+import kyriakum.ccrates.ccrates.entities.contents.Content;
 import kyriakum.ccrates.ccrates.utils.PlaceHolder;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -30,7 +31,11 @@ public class InfoCommand implements SubCommand{
             player.sendMessage(ChatColor.GREEN + "Contents Size: " + crate.getContents().size());
             player.sendMessage(ChatColor.GREEN + "Block: " + PlaceHolder.normalizeMaterial(crate.getBlock().name()));
             player.sendMessage(ChatColor.GREEN + "Floor: " + PlaceHolder.normalizeMaterial(crate.getFloor().name()));
-            player.sendMessage(ChatColor.GREEN + "Key: "+crate.getKey().getItemMeta().getDisplayName());
+            player.sendMessage(ChatColor.GREEN + "Key: "+ crate.getKey().getItemMeta().getDisplayName());
+            player.sendMessage(ChatColor.GREEN + "Contents: ");
+            for(Content content : crate.getContents()){
+                player.sendMessage(ChatColor.GREEN + "Content "+ content.getContentID() + ": " + content.getContent().getItemMeta().getDisplayName());
+            }
         }
 
     }

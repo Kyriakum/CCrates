@@ -15,6 +15,7 @@ public class ItemContent extends Content{
     @Override
     public void givePlayer(Player player) {
         ItemStack content = getContent().clone();
+        if(amount>1)
         content.setAmount(amount);
         player.getInventory().addItem(content);
     }

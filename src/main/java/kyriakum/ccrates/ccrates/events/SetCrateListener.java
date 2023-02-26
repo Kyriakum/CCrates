@@ -31,7 +31,6 @@ public class SetCrateListener implements Listener {
                 player.sendMessage(ChatColor.RED + "This block is already a Crate!");
             } else {
 
-
                 cCrates.getLocationManager().addCrateLocation(setCrate.get(player), block.getLocation());
                 player.sendMessage(ChatColor.GREEN + "Crate " + setCrate.get(player).getHologramName() + " was set!");
                 block.setType(setCrate.get(player).getBlock());
@@ -41,6 +40,5 @@ public class SetCrateListener implements Listener {
             }
             setCrate.remove(player);
         }
-
     }
 }

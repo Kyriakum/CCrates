@@ -59,17 +59,28 @@ public class LocationManager extends FileManager {
         return null;
     }
 
+    public CrateInstance getInstance(Crate crate, int id){
+        for(CrateInstance instance : cratesInstances){
+            if(instance.getCrate().equals(crate)&&instance.getId()==id) return instance;
+        }
+        return null;
+    }
+
     public void addCrateLocation(Crate crate, Location loc){
         try {
-            getConfig().set("Crates." + crate.getName() + ".Locations." + String.valueOf(getLocSize(crate)+1) + ".world",loc.getWorld().getName());
-            getConfig().set("Crates." + crate.getName() + ".Locations." + String.valueOf(getLocSize(crate)+1) + ".x", loc.getBlockX());
-            getConfig().set("Crates." + crate.getName() + ".Locations." + String.valueOf(getLocSize(crate)+1) + ".y", loc.getBlockY());
-            getConfig().set("Crates." + crate.getName() + ".Locations." + String.valueOf(getLocSize(crate)+1) + ".z", loc.getBlockZ());
+            int id = 1;
+            while(getInstance(crate, id)!=null) id++;
+
+            getConfig().set("Crates." + crate.getName() + ".Locations." + id + ".world",loc.getWorld().getName());
+            getConfig().set("Crates." + crate.getName() + ".Locations." + id + ".x", loc.getBlockX());
+            getConfig().set("Crates." + crate.getName() + ".Locations." + id + ".y", loc.getBlockY());
+            getConfig().set("Crates." + crate.getName() + ".Locations." + id + ".z", loc.getBlockZ());
             getConfig().save(getFile());
+            cratesInstances.add(new CrateInstance(crate, loc, id));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        cratesInstances.add(new CrateInstance(crate, loc, getLocSize(crate)+1));
+
     }
 
     public void removeCrateLocation(Location loc){
