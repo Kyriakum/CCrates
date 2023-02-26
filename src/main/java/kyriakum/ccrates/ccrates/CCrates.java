@@ -50,7 +50,7 @@ public final class CCrates extends JavaPlugin {
     private void safeRemove(){
         for(CrateInstance crateInstance : locationManager.getCratesInstances()){
             if(crateInstance.isRunning()){
-                crateInstance.getCrateRunning().resetArea();
+                crateInstance.stopRunnable();
             }
         }
     }

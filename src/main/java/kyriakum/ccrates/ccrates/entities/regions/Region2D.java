@@ -1,7 +1,6 @@
 package kyriakum.ccrates.ccrates.entities.regions;
 
-import kyriakum.ccrates.ccrates.entities.Crate;
-import kyriakum.ccrates.ccrates.entities.CrateRunning;
+import kyriakum.ccrates.ccrates.entities.CrateRunnable;
 import kyriakum.ccrates.ccrates.events.Region2DListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -18,16 +17,15 @@ public class Region2D {
     private Location pos1;
     private Location pos2;
     private Map<Location, Material> blocks;
-    private CrateRunning running;
+    private CrateRunnable running;
     private Region2DListener listener;
 
-    public Region2D(Location pos1, Location pos2, CrateRunning running){
+    public Region2D(Location pos1, Location pos2, CrateRunnable running){
         this.pos1 = pos1;
         this.pos2 = pos2;
         blocks = new HashMap<>();
         this.running = running;
-        listener = new Region2DListener(running, this);
-        Bukkit.getPluginManager().registerEvents(listener, running.getInstance().getCrate().getCCrates());
+
     }
 
     public void fillRegion(Material mat){
@@ -45,13 +43,15 @@ public class Region2D {
         pos1.getBlock().setType(blocks.get(pos1));
         pos2.getBlock().setType(blocks.get(pos2));
 
-        Location corner3 = new Location(pos1.getWorld(), pos1.getX(), pos1.getY(), pos2.getZ());
-        Location corner4 = new Location(pos2.getWorld(), pos2.getX(), pos1.getY(), pos1.getZ());
-
+        Location corner3 = pos1.clone();
+        corner3.setZ(pos2.getZ());
+        Location corner4 = pos1.clone();
+        corner4.setX(pos2.getX());
         corner3.getBlock().setType(blocks.get(corner3));
         corner4.getBlock().setType(blocks.get(corner4));
 
-        System.out.println(blocks.get(pos1).name());
+
+
     }
 
     public void listAllBlocks(){
@@ -71,6 +71,11 @@ public class Region2D {
             }
         }
         return false;
+    }
+
+    public void noPassing(){
+        listener = new Region2DListener(running, this);
+        Bukkit.getPluginManager().registerEvents(listener, running.getInstance().getCrate().getCCrates());
     }
 
     public Location getPos2() {
@@ -103,6 +108,7 @@ public class Region2D {
 
     public void terminate(){
         resetRegion();
+        if(listener!=null)
         HandlerList.unregisterAll(listener);
     }
 }

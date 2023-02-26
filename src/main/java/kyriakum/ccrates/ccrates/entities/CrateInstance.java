@@ -8,7 +8,7 @@ public class CrateInstance {
     private Crate crate;
     private Location location;
     private CrateState state;
-    private CrateRunning running;
+    private CrateRunnable running;
     private int id;
 
     public CrateInstance(Crate crate, Location location, int id){
@@ -19,7 +19,7 @@ public class CrateInstance {
     }
 
     public void startCrate(Player player){
-        running = new CrateRunning(player, this);
+        running = new CrateRunnable(player, this);
         state = CrateState.IN_USE;
     }
 
@@ -48,7 +48,15 @@ public class CrateInstance {
         return false;
     }
 
-    public CrateRunning getCrateRunning() {
+    public void stopRunnable(){
+        running.resetArea();
+        setState(CrateState.ENABLED);
+        running = null;
+    }
+
+    public CrateRunnable getCrateRunnable() {
         return running;
     }
+
+
 }

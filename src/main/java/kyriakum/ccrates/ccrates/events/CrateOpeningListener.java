@@ -2,8 +2,7 @@ package kyriakum.ccrates.ccrates.events;
 
 import kyriakum.ccrates.ccrates.CCrates;
 import kyriakum.ccrates.ccrates.entities.CrateEntity;
-import kyriakum.ccrates.ccrates.entities.CrateInstance;
-import kyriakum.ccrates.ccrates.entities.CrateRunning;
+import kyriakum.ccrates.ccrates.entities.CrateRunnable;
 import kyriakum.ccrates.ccrates.entities.contents.Content;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.network.protocol.game.PacketPlayOutBlockAction;
@@ -31,10 +30,10 @@ import java.util.List;
 
 public class CrateOpeningListener implements Listener {
 
-    private CrateRunning running;
+    private CrateRunnable running;
     private CCrates cCrates;
 
-    public CrateOpeningListener(CCrates cCrates, CrateRunning running){
+    public CrateOpeningListener(CCrates cCrates, CrateRunnable running){
         this.cCrates = cCrates;
         this.running = running;
     }
@@ -53,14 +52,14 @@ public class CrateOpeningListener implements Listener {
             p.sendMessage(ChatColor.GREEN + "Poof!");
             entity.makeMagicOpening();
             if(running.allOpened())
-                Bukkit.getScheduler().runTaskLater(cCrates, () -> running.resetArea(), 3*running.SECONDS);
+                Bukkit.getScheduler().runTaskLater(cCrates, () -> running.getInstance().stopRunnable(), 3*running.SECONDS);
         }
         e.setCancelled(true);
     }
     @EventHandler
     public void onLeave(PlayerQuitEvent e){
         if(e.getPlayer().equals(running.getPlayer())){
-            running.resetArea();
+            running.getInstance().stopRunnable();
         }
     }
 

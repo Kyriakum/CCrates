@@ -14,7 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CrateRunning extends BukkitRunnable {
+public class CrateRunnable extends BukkitRunnable {
 
     private Player player;
     private CrateInstance instance;
@@ -28,7 +28,7 @@ public class CrateRunning extends BukkitRunnable {
     private CrateOpeningListener listener;
 
 
-    public CrateRunning(Player player, CrateInstance instance){
+    public CrateRunnable(Player player, CrateInstance instance){
         this.player = player;
         playerLocation = player.getLocation();
         this.instance = instance;
@@ -37,6 +37,7 @@ public class CrateRunning extends BukkitRunnable {
         entities = new ArrayList<>();
         setChestEntities();
         region2D = new Region2D(instance.getLocation().clone().add(-3,-1,-3), instance.getLocation().clone().add(3,-1,3), this);
+        region2D.noPassing();
         listener = new CrateOpeningListener(instance.getCrate().getCCrates(), this);
         Bukkit.getPluginManager().registerEvents(listener, instance.getCrate().getCCrates());
         start();
@@ -52,12 +53,7 @@ public class CrateRunning extends BukkitRunnable {
         } else if(counter<=6){
             entities.get(counter%4).spawn();
         } else if(counter==7) {
-            counter++;
             cancel();
-            return;
-        } else{
-            resetArea();
-            return;
         }
         counter++;
     }
@@ -65,7 +61,7 @@ public class CrateRunning extends BukkitRunnable {
      public void start(){
         region2D.listAllBlocks();
         instance.getLocation().getBlock().setType(Material.AIR);
-        player.teleport(instance.getLocation().add(.5,0,.5));
+        player.teleport(instance.getLocation().clone().add(.5,0,.5));
         runTaskTimer(instance.getCrate().getCCrates(), SECONDS, SECONDS);
     }
 
@@ -100,18 +96,13 @@ public class CrateRunning extends BukkitRunnable {
     public void resetArea(){
         if(player.isOnline()) player.teleport(playerLocation);
 
-        region2D.resetRegion();
-
        entities.forEach(CrateEntity::despawn);
 
         setMainBlock();
 
-        instance.setState(CrateState.ENABLED);
-
         region2D.terminate();
 
         HandlerList.unregisterAll(listener);
-        cancel();
     }
 
     private void setMainBlock(){
@@ -119,7 +110,6 @@ public class CrateRunning extends BukkitRunnable {
         Directional dir = (Directional) instance.getLocation().getBlock().getBlockData();
         dir.setFacing(mainChestFace);
         instance.getLocation().getBlock().setBlockData(dir);
-
     }
 
     public boolean allOpened(){

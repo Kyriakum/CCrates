@@ -27,12 +27,11 @@ public class PlayerInteract implements Listener {
         return;
 
         Player player = e.getPlayer();
-
         if(cCrates.getLocationManager().containsCrate(e.getClickedBlock().getLocation()) && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             CrateInstance crateInstance = cCrates.getLocationManager().getCrateInstanceByLocation(e.getClickedBlock().getLocation());
-            if(player.getInventory().getItemInMainHand().equals(crateInstance.getCrate().getKey())){
-                player.sendMessage(ChatColor.GREEN + "WOW!");
+            if(player.getInventory().getItemInMainHand().isSimilar(crateInstance.getCrate().getKey())){
                 crateInstance.startCrate(player);
+                player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount()-1);
             }
             e.setCancelled(true);
         }
@@ -46,5 +45,6 @@ public class PlayerInteract implements Listener {
             player.sendMessage(ChatColor.GREEN + "This Crate was Destroyed!");
         }
     }
+
 
 }

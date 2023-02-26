@@ -5,6 +5,7 @@ import kyriakum.ccrates.ccrates.entities.Crate;
 import kyriakum.ccrates.ccrates.entities.contents.CmdContent;
 import kyriakum.ccrates.ccrates.entities.contents.Content;
 import kyriakum.ccrates.ccrates.entities.contents.ItemContent;
+import kyriakum.ccrates.ccrates.utils.PlaceHolder;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -34,7 +35,7 @@ public class ConfigManager extends FileManager {
     }
     public Crate loadCrate(String name){
         if(getConfig().get("Crates." + name) == null) return null;
-        String hologramName = getConfig().getString("Crates." + name + ".HologramName");
+        String hologramName = PlaceHolder.alternateColors(getConfig().getString("Crates." + name + ".HologramName"));
         Material block = Material.matchMaterial(getConfig().getString("Crates." + name + ".Block"));
         Material floor = Material.matchMaterial(getConfig().getString("Crates." + name + ".Floor"));
         ItemStack key = loadKeyItem("Crates."+name+".Key");
@@ -45,9 +46,11 @@ public class ConfigManager extends FileManager {
     private ItemStack loadKeyItem(String path){
         ItemStack key = new ItemStack(Material.matchMaterial(getConfig().getString(path+".Item")));
         ItemMeta meta = key.getItemMeta();
-        meta.setDisplayName(getConfig().getString(path+".Name"));
+        meta.setDisplayName(PlaceHolder.alternateColors(getConfig().getString(path+".Name")));
         List<String> lore = new ArrayList<>();
-        if(getConfig().getList(path+".Lore")!=null) lore = (List<String>) getConfig().getList(path+".Lore");
+        if(getConfig().getList(path+".Lore")!=null) for(String string: (List<String>) getConfig().getList(path+".Lore")){
+            lore.add(PlaceHolder.alternateColors(string));
+        }
         meta.setLore(lore);
         key.setItemMeta(meta);
         return key;
@@ -60,22 +63,24 @@ public class ConfigManager extends FileManager {
             int id = Integer.valueOf(item);
             String type = getConfig().getString(path+ "." + item + ".Type");
             switch(type){
-                case "ITEM": content = loadItemContent(path+"."+item, id);
-                case "CMD": content = loadCmdContent(path+"."+item, id);
+                case "ITEM": {content = loadItemContent(path+"."+item, id); break; }
+                case "CMD": {content = loadCmdContent(path+"."+item, id); break;}
                 default:
                     break;
             }
+
           if(content!=null) contents.add(content);
         });
+
         return contents;
     }
 
     private ItemContent loadItemContent(String path, int id){
         ItemStack stack = loadKeyItem(path);
-        stack.setAmount(getConfig().getInt(path + ".Amount"));
+        int amount = getConfig().getInt(path + ".Amount");
         int perc = getConfig().getInt(path + ".Percentage");
 
-        return new ItemContent(id, stack, perc);
+        return new ItemContent(id, stack, perc, amount);
     }
 
     private CmdContent loadCmdContent(String path, int id){
