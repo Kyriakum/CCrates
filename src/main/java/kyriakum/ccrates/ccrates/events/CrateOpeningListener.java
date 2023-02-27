@@ -50,7 +50,7 @@ public class CrateOpeningListener implements Listener {
 
         if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock()!=null && entity!=null){
             p.sendMessage(ChatColor.GREEN + "Poof!");
-            entity.makeMagicOpening();
+            entity.getAnimation().start();
             if(running.allOpened())
                 Bukkit.getScheduler().runTaskLater(cCrates, () -> running.getInstance().stopRunnable(), 3*running.SECONDS);
         }

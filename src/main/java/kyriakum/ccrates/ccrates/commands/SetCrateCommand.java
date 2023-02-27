@@ -34,8 +34,13 @@ public class SetCrateCommand implements SubCommand{
             return;
         }
 
-        SetCrateListener.setCrate.put(player, crate);
+        if(crate.getContents().size()==0) {
+            player.sendMessage(ChatColor.RED + "This crate has no contents!");
+            return;
+        }
 
+        SetCrateListener.setCrate.put(player, crate);
+        player.sendMessage(ChatColor.GREEN + "Right Click a block to set it as a " + crate.getHologramName());
     }
 
     @Override

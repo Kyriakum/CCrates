@@ -64,6 +64,7 @@ public class ConfigManager extends FileManager {
 
     private List<Content> loadContents(String path){
         List<Content> contents = new ArrayList<>();
+        if(getConfig().getConfigurationSection(path)==null) return contents;
         getConfig().getConfigurationSection(path).getKeys(false).forEach(item -> {
             Content content = null;
             int id = Integer.valueOf(item);
@@ -112,7 +113,8 @@ public class ConfigManager extends FileManager {
             getConfig().set("Crates." + crate.getName() + ".Items." + String.valueOf(id) + ".Lore", itemStack.getItemMeta().getLore());
 
             getConfig().save(getFile());
-            Content content = new ItemContent(id, itemStack, 20, itemStack.getAmount());
+            Content content = loadItemContent("Crates." + crate.getName() + ".Items." + String.valueOf(id), id);
+            System.out.println(itemStack.getType());
             crate.addContent(content);
 
             AddContentEvent e= new AddContentEvent(crate, content);
