@@ -1,11 +1,16 @@
 package kyriakum.ccrates.ccrates.managers.filemanagers;
 
 import kyriakum.ccrates.ccrates.CCrates;
+import kyriakum.ccrates.ccrates.api.AddContentEvent;
+import kyriakum.ccrates.ccrates.api.CreateCrateEvent;
+import kyriakum.ccrates.ccrates.api.DeleteCrateEvent;
+import kyriakum.ccrates.ccrates.api.RemoveContentEvent;
 import kyriakum.ccrates.ccrates.entities.Crate;
 import kyriakum.ccrates.ccrates.entities.contents.CmdContent;
 import kyriakum.ccrates.ccrates.entities.contents.Content;
 import kyriakum.ccrates.ccrates.entities.contents.ItemContent;
 import kyriakum.ccrates.ccrates.utils.PlaceHolder;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -107,8 +112,11 @@ public class ConfigManager extends FileManager {
             getConfig().set("Crates." + crate.getName() + ".Items." + String.valueOf(id) + ".Lore", itemStack.getItemMeta().getLore());
 
             getConfig().save(getFile());
+            Content content = new ItemContent(id, itemStack, 20, itemStack.getAmount());
+            crate.addContent(content);
 
-            crate.addContent(new ItemContent(id, itemStack, 20, itemStack.getAmount()));
+            AddContentEvent e= new AddContentEvent(crate, content);
+            Bukkit.getPluginManager().callEvent(e);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -128,7 +136,11 @@ public class ConfigManager extends FileManager {
             getConfig().set("Crates." + crate.getName() + ".Items." + id + ".Lore", itemStack.getItemMeta().getLore());
             getConfig().set("Crates." + crate.getName() + ".Items." + id + ".Commands", "");
             getConfig().save(getFile());
-            crate.addContent(new CmdContent(id, itemStack, 20, new ArrayList<>()));
+            Content content = new CmdContent(id, itemStack, 20, new ArrayList<>());
+            crate.addContent(content);
+
+            AddContentEvent e= new AddContentEvent(crate, content);
+            Bukkit.getPluginManager().callEvent(e);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -139,12 +151,50 @@ public class ConfigManager extends FileManager {
                 try {
                     getConfig().set("Crates." + crate.getName() + ".Items." + id, null);
                     getConfig().save(getFile());
+                    RemoveContentEvent e = new RemoveContentEvent(crate, crate.getContent(id));
+                    Bukkit.getPluginManager().callEvent(e);
+                    crate.removeContent(id);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                crate.removeContent(id);
+
                 return true;
             }
             return false;
+    }
+
+    public void createCrate(String name){
+        Crate crate = new Crate(getCCrates(), name, name, new ItemStack(Material.TRIPWIRE_HOOK), Material.CHEST, Material.STONE, new ArrayList<>());
+
+        try {
+            getConfig().set("Crates." + name  + ".HologramName", name);
+            getConfig().set("Crates." + name  + ".Block", "CHEST");
+            getConfig().set("Crates." + name  + ".Floor", "STONE");
+            getConfig().set("Crates." + name  + ".Key.Item", "TRIPWIRE_HOOK");
+            getConfig().set("Crates." + name  + ".Key.Name", "Key");
+            getConfig().set("Crates." + name  + ".Key.Lore", new ArrayList<>());
+            getConfig().save(getFile());
+            getCCrates().getCrateManager().addCrate(crate);
+            CreateCrateEvent e = new CreateCrateEvent(crate);
+            Bukkit.getPluginManager().callEvent(e);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public boolean deleteCrate(Crate crate){
+        if(crate==null) return false;
+        try {
+            getConfig().set("Crates." + crate.getName(), null);
+            getConfig().save(getFile());
+            DeleteCrateEvent e = new DeleteCrateEvent(crate);
+            Bukkit.getPluginManager().callEvent(e);
+            getCCrates().getCrateManager().deleteCrate(crate);
+         } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 }

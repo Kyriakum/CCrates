@@ -28,6 +28,10 @@ public class CrateManager {
     }
 
     public void addCrate(Crate crate){
+        crates.add(crate);
+    }
 
+    public void deleteCrate(Crate crate){
+        crates.remove(crate);
     }
 }

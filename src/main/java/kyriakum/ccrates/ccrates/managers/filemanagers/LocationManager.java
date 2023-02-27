@@ -1,6 +1,8 @@
 package kyriakum.ccrates.ccrates.managers.filemanagers;
 
 import kyriakum.ccrates.ccrates.CCrates;
+import kyriakum.ccrates.ccrates.api.NewInstanceEvent;
+import kyriakum.ccrates.ccrates.api.RemoveInstanceEvent;
 import kyriakum.ccrates.ccrates.entities.Crate;
 import kyriakum.ccrates.ccrates.entities.CrateInstance;
 import org.bukkit.Bukkit;
@@ -76,7 +78,10 @@ public class LocationManager extends FileManager {
             getConfig().set("Crates." + crate.getName() + ".Locations." + id + ".y", loc.getBlockY());
             getConfig().set("Crates." + crate.getName() + ".Locations." + id + ".z", loc.getBlockZ());
             getConfig().save(getFile());
-            cratesInstances.add(new CrateInstance(crate, loc, id));
+            CrateInstance instance = new CrateInstance(crate, loc, id);
+            cratesInstances.add(instance);
+            NewInstanceEvent e = new NewInstanceEvent(instance);
+            Bukkit.getPluginManager().callEvent(e);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,10 +93,14 @@ public class LocationManager extends FileManager {
         try {
             getConfig().set("Crates."+inst.getCrate().getName()+".Locations." + String.valueOf(inst.getId()), null);
             getConfig().save(getFile());
+
+            RemoveInstanceEvent e = new RemoveInstanceEvent(inst);
+            Bukkit.getPluginManager().callEvent(e);
+            cratesInstances.remove(inst);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        cratesInstances.remove(inst);
+
     }
 
 

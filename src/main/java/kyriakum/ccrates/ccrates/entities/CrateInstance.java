@@ -1,5 +1,7 @@
 package kyriakum.ccrates.ccrates.entities;
 
+import kyriakum.ccrates.ccrates.api.PlayerOpenCrateEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -21,6 +23,10 @@ public class CrateInstance {
     public void startCrate(Player player){
         running = new CrateRunnable(player, this);
         state = CrateState.IN_USE;
+        player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount()-1);
+
+        PlayerOpenCrateEvent e = new PlayerOpenCrateEvent(player, this);
+        Bukkit.getPluginManager().callEvent(e);
     }
 
     public Location getLocation() {

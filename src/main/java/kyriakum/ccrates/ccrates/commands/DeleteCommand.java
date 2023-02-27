@@ -5,17 +5,17 @@ import kyriakum.ccrates.ccrates.entities.Crate;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class CreateCommand implements SubCommand {
+public class DeleteCommand implements SubCommand {
 
-    private final String name = "create";
+    private final String name = "delete";
     private final CCrates cCrates;
-    public CreateCommand(CCrates cCrates){
+    public DeleteCommand(CCrates cCrates){
         this.cCrates = cCrates;
     }
     @Override
     public void onCommand(Player player, String[] args) {
         if(args.length<2){
-            player.sendMessage(ChatColor.RED + "Wrong syntax: /ccrates create (crate)");
+            player.sendMessage(ChatColor.RED + "Wrong syntax: /ccrates delete (crate)");
             return;
         }
 
@@ -24,11 +24,11 @@ public class CreateCommand implements SubCommand {
             builder.append(args[i]);
         }
         Crate crate = cCrates.getCrateManager().getCrate(builder.toString());
-        if(crate!=null){
-            player.sendMessage(ChatColor.RED + "This crate already exists!");
+        if(crate==null){
+            player.sendMessage(ChatColor.RED + "This crate doesn't exist!");
         } else {
-            cCrates.getConfigManager().createCrate(builder.toString());
-            player.sendMessage(ChatColor.GREEN + "Crate " + builder.toString() + " was successfully created!");
+            cCrates.getConfigManager().deleteCrate(crate);
+            player.sendMessage(ChatColor.GREEN + "Crate " + builder.toString() + " was successfully deleted!");
         }
     }
 

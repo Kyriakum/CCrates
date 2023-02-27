@@ -31,7 +31,7 @@ public class PlayerInteract implements Listener {
             CrateInstance crateInstance = cCrates.getLocationManager().getCrateInstanceByLocation(e.getClickedBlock().getLocation());
             if(player.getInventory().getItemInMainHand().isSimilar(crateInstance.getCrate().getKey())){
                 crateInstance.startCrate(player);
-                player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount()-1);
+
             }
             e.setCancelled(true);
         }

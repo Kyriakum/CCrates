@@ -28,6 +28,8 @@ public class CCratesCommands implements CommandExecutor {
         commands.add(new InfoCommand(cCrates));
         commands.add(new AddCommand(cCrates));
         commands.add(new RemoveCommand(cCrates));
+        commands.add(new CreateCommand(cCrates));
+        commands.add(new DeleteCommand(cCrates));
         cCrates.getCommand("ccrates").setExecutor(this);
     }
 
