@@ -1,7 +1,6 @@
 package kyriakum.ccrates.ccrates.entities;
 
 import kyriakum.ccrates.ccrates.animations.Animation;
-import kyriakum.ccrates.ccrates.animations.StdAnimation;
 import kyriakum.ccrates.ccrates.entities.contents.Content;
 import org.bukkit.*;
 import org.bukkit.block.Block;

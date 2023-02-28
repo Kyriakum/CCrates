@@ -34,4 +34,10 @@ public class CrateManager {
     public void deleteCrate(Crate crate){
         crates.remove(crate);
     }
+
+    public void loadGUIS(){
+        for(Crate crate : getCrates()){
+            crate.loadGUIs();
+        }
+    }
 }

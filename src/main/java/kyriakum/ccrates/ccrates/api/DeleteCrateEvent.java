@@ -18,7 +18,7 @@ public class DeleteCrateEvent extends Event {
         return HANDLERS_LIST;
     }
 
-    public static HandlerList getHandlersList(){
+    public static HandlerList getHandlerList(){
         return HANDLERS_LIST;
     }
 

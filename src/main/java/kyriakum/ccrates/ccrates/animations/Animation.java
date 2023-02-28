@@ -1,6 +1,5 @@
 package kyriakum.ccrates.ccrates.animations;
 import kyriakum.ccrates.ccrates.api.PlayerOpenCrateEntityEvent;
-import kyriakum.ccrates.ccrates.entities.Crate;
 import kyriakum.ccrates.ccrates.entities.CrateEntity;
 import org.bukkit.Bukkit;
 

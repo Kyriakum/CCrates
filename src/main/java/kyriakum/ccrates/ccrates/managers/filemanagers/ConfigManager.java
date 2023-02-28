@@ -1,6 +1,7 @@
 package kyriakum.ccrates.ccrates.managers.filemanagers;
 
 import kyriakum.ccrates.ccrates.CCrates;
+import kyriakum.ccrates.ccrates.animations.AnimationType;
 import kyriakum.ccrates.ccrates.api.AddContentEvent;
 import kyriakum.ccrates.ccrates.api.CreateCrateEvent;
 import kyriakum.ccrates.ccrates.api.DeleteCrateEvent;
@@ -44,9 +45,10 @@ public class ConfigManager extends FileManager {
         String hologramName = PlaceHolder.alternateColors(getConfig().getString("Crates." + name + ".HologramName"));
         Material block = Material.matchMaterial(getConfig().getString("Crates." + name + ".Block"));
         Material floor = Material.matchMaterial(getConfig().getString("Crates." + name + ".Floor"));
+        AnimationType type = AnimationType.valueOf(getConfig().getString("Crates." + name + ".Animation"));
         ItemStack key = loadKeyItem("Crates."+name+".Key");
         List<Content> contents = loadContents("Crates."+name+".Items");
-        return new Crate(getCCrates(),name, hologramName, key, block, floor, contents);
+        return new Crate(getCCrates(),name, hologramName, key, block, floor, contents, type);
     }
 
     private ItemStack loadKeyItem(String path){
@@ -154,8 +156,9 @@ public class ConfigManager extends FileManager {
                     getConfig().set("Crates." + crate.getName() + ".Items." + id, null);
                     getConfig().save(getFile());
                     RemoveContentEvent e = new RemoveContentEvent(crate, crate.getContent(id));
-                    Bukkit.getPluginManager().callEvent(e);
+
                     crate.removeContent(id);
+                    Bukkit.getPluginManager().callEvent(e);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -166,11 +169,12 @@ public class ConfigManager extends FileManager {
     }
 
     public void createCrate(String name){
-        Crate crate = new Crate(getCCrates(), name, name, new ItemStack(Material.TRIPWIRE_HOOK), Material.CHEST, Material.STONE, new ArrayList<>());
+        Crate crate = new Crate(getCCrates(), name, name, new ItemStack(Material.TRIPWIRE_HOOK), Material.CHEST, Material.STONE, new ArrayList<>(), AnimationType.STD_ANIMATION);
 
         try {
             getConfig().set("Crates." + name  + ".HologramName", name);
             getConfig().set("Crates." + name  + ".Block", "CHEST");
+            getConfig().set("Crates." + name  + ".Animation", "STD_ANIMATION");
             getConfig().set("Crates." + name  + ".Floor", "STONE");
             getConfig().set("Crates." + name  + ".Key.Item", "TRIPWIRE_HOOK");
             getConfig().set("Crates." + name  + ".Key.Name", "Key");
@@ -192,8 +196,8 @@ public class ConfigManager extends FileManager {
             getConfig().set("Crates." + crate.getName(), null);
             getConfig().save(getFile());
             DeleteCrateEvent e = new DeleteCrateEvent(crate);
-            Bukkit.getPluginManager().callEvent(e);
             getCCrates().getCrateManager().deleteCrate(crate);
+            Bukkit.getPluginManager().callEvent(e);
          } catch (IOException e) {
             e.printStackTrace();
         }

@@ -2,6 +2,7 @@ Crates:
   TestCrate:
     HologramName: 'Test Crate'
     Block: CHEST
+    Animation: STD_ANIMATION
     Floor: NETHERRITE
     Key:
       Item: TRIPWIRE_HOOK

@@ -2,7 +2,6 @@ package kyriakum.ccrates.ccrates.commands;
 
 import kyriakum.ccrates.ccrates.CCrates;
 import kyriakum.ccrates.ccrates.entities.Crate;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 

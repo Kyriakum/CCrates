@@ -1,10 +1,9 @@
 package kyriakum.ccrates.ccrates.entities;
 
 import kyriakum.ccrates.ccrates.CCrates;
-import kyriakum.ccrates.ccrates.animations.Animation;
 import kyriakum.ccrates.ccrates.animations.AnimationType;
-import kyriakum.ccrates.ccrates.animations.StdAnimation;
 import kyriakum.ccrates.ccrates.entities.contents.Content;
+import kyriakum.ccrates.ccrates.guis.crateguis.CrateMenuGUI;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,14 +18,15 @@ public class Crate {
     private Material floor;
     private List<Content> contents;
     private AnimationType type;
+    private CrateMenuGUI menuGUI;
     private final CCrates cCrates;
 
-    public Crate(CCrates cCrates, String name, String hologramName, ItemStack key, Material block, Material floor, List<Content> contents){
+    public Crate(CCrates cCrates, String name, String hologramName, ItemStack key, Material block, Material floor, List<Content> contents, AnimationType type){
         this.cCrates = cCrates;
         this.name = name;
         this.hologramName = hologramName;
         this.key = key;
-        type = AnimationType.STD_ANIMATION;
+        this.type = type;
         this.block = block;
         this.floor = floor;
         this.contents = contents;
@@ -79,4 +79,9 @@ public class Crate {
         contents.remove(getContent(id));
     }
 
+    public void loadGUIs(){
+        menuGUI = new CrateMenuGUI(cCrates,this);
+    }
+
+    public CrateMenuGUI getMenuGUI() {return menuGUI;}
 }

@@ -38,7 +38,11 @@ public class CCratesCommands implements CommandExecutor {
       if(sender instanceof Player){
           Player player = (Player) sender;
 
-          if(args.length < 1){
+          if(args.length == 0){
+            //OpenInventory
+              player.openInventory(cCrates.getMainGUI().getInventory(1));
+              return false;
+          } else if(args.length >= 1 && args[0].equalsIgnoreCase("help")){
               invalidSubcommand(player);
               return false;
           }
@@ -61,7 +65,6 @@ public class CCratesCommands implements CommandExecutor {
     }
 
     private void invalidSubcommand(Player player){
-        player.sendMessage(ChatColor.RED + "Incorrect usage! Use: ");
         commands.forEach(t -> player.sendMessage(ChatColor.RED + "/ccrates " + t.getName()));
     }
 

@@ -2,8 +2,11 @@ package kyriakum.ccrates.ccrates;
 
 import kyriakum.ccrates.ccrates.commands.CCratesCommands;
 import kyriakum.ccrates.ccrates.entities.CrateInstance;
+import kyriakum.ccrates.ccrates.events.CCratesEventsListener;
+import kyriakum.ccrates.ccrates.events.GUIInteractListener;
 import kyriakum.ccrates.ccrates.events.PlayerInteract;
 import kyriakum.ccrates.ccrates.events.SetCrateListener;
+import kyriakum.ccrates.ccrates.guis.MainGUI;
 import kyriakum.ccrates.ccrates.managers.filemanagers.ConfigManager;
 import kyriakum.ccrates.ccrates.managers.CrateManager;
 import kyriakum.ccrates.ccrates.managers.filemanagers.LocationManager;
@@ -15,6 +18,7 @@ public final class CCrates extends JavaPlugin {
     private ConfigManager configManager;
     private LocationManager locationManager;
     private CrateManager crateManager;
+    private MainGUI mainGUI;
 
     @Override
     public void onEnable() {
@@ -22,12 +26,16 @@ public final class CCrates extends JavaPlugin {
         configManager = new ConfigManager(this);
         crateManager = new CrateManager(this);
         locationManager = new LocationManager(this);
-        //Setup Commands
+         //Setup Commands
         new CCratesCommands(this);
 
+        mainGUI = new MainGUI(this);
+        crateManager.loadGUIS();
         //Setup Listeners
         Bukkit.getPluginManager().registerEvents(new PlayerInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new SetCrateListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new GUIInteractListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new CCratesEventsListener(this), this);
     }
 
     @Override
@@ -47,6 +55,8 @@ public final class CCrates extends JavaPlugin {
         return crateManager;
     }
 
+    public MainGUI getMainGUI() {return mainGUI;}
+
     private void safeRemove(){
         for(CrateInstance crateInstance : locationManager.getCratesInstances()){
             if(crateInstance.isRunning()){
@@ -54,4 +64,6 @@ public final class CCrates extends JavaPlugin {
             }
         }
     }
+
+    public void reloadGUI() { mainGUI = new MainGUI(this);}
 }

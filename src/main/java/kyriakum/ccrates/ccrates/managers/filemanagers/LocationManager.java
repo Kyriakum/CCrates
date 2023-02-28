@@ -17,7 +17,6 @@ import java.util.List;
 public class LocationManager extends FileManager {
 
     private List<CrateInstance> cratesInstances;
-
     public LocationManager(CCrates cCrates) {
         super(cCrates);
         loadFile(new File(cCrates.getDataFolder(), "locations.yml"));
@@ -25,11 +24,10 @@ public class LocationManager extends FileManager {
         cratesInstances = loadLocations(cCrates.getCrateManager().getCrates());
     }
 
-
-    public List<Location> getCrateLocations(Crate crate) {
-        List<Location> locs = new ArrayList<>();
+    public List<CrateInstance> getCrateInstances(Crate crate) {
+        List<CrateInstance> locs = new ArrayList<>();
         for(CrateInstance crateInstance : cratesInstances){
-            if(crateInstance.getCrate().equals(crate)) locs.add(crateInstance.getLocation());
+            if(crateInstance.getCrate().equals(crate)) locs.add(crateInstance);
         }
         return locs;
     }
@@ -61,6 +59,8 @@ public class LocationManager extends FileManager {
         return null;
     }
 
+
+
     public CrateInstance getInstance(Crate crate, int id){
         for(CrateInstance instance : cratesInstances){
             if(instance.getCrate().equals(crate)&&instance.getId()==id) return instance;
@@ -88,6 +88,24 @@ public class LocationManager extends FileManager {
 
     }
 
+    public void removeAllCrateLocations(Crate crate){
+        for(CrateInstance inst : getCrateInstances(crate)) removeCrateLocation(inst);
+    }
+
+    public void removeCrateLocation(CrateInstance inst){
+        try {
+            getConfig().set("Crates."+inst.getCrate().getName()+".Locations." + String.valueOf(inst.getId()), null);
+            getConfig().save(getFile());
+
+            RemoveInstanceEvent e = new RemoveInstanceEvent(inst);
+            cratesInstances.remove(inst);
+            Bukkit.getPluginManager().callEvent(e);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void removeCrateLocation(Location loc){
         CrateInstance inst = getCrateInstanceByLocation(loc);
         try {
@@ -95,8 +113,9 @@ public class LocationManager extends FileManager {
             getConfig().save(getFile());
 
             RemoveInstanceEvent e = new RemoveInstanceEvent(inst);
-            Bukkit.getPluginManager().callEvent(e);
             cratesInstances.remove(inst);
+            Bukkit.getPluginManager().callEvent(e);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

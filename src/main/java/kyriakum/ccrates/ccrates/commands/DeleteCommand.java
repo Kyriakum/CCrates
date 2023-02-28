@@ -28,6 +28,7 @@ public class DeleteCommand implements SubCommand {
             player.sendMessage(ChatColor.RED + "This crate doesn't exist!");
         } else {
             cCrates.getConfigManager().deleteCrate(crate);
+            cCrates.getLocationManager().removeAllCrateLocations(crate);
             player.sendMessage(ChatColor.GREEN + "Crate " + builder.toString() + " was successfully deleted!");
         }
     }
