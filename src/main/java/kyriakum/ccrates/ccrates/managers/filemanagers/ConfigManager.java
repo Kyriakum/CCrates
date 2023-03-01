@@ -10,6 +10,7 @@ import kyriakum.ccrates.ccrates.entities.Crate;
 import kyriakum.ccrates.ccrates.entities.contents.CmdContent;
 import kyriakum.ccrates.ccrates.entities.contents.Content;
 import kyriakum.ccrates.ccrates.entities.contents.ItemContent;
+import kyriakum.ccrates.ccrates.guis.crateguis.changevalueguis.ChangeValueType;
 import kyriakum.ccrates.ccrates.utils.PlaceHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -203,4 +204,22 @@ public class ConfigManager extends FileManager {
         }
         return true;
     }
+
+    public void changeValue(Crate crate, ChangeValueType type, ItemStack stack){
+
+         try {
+             getConfig().set("Crates." + crate.getName() + "." + PlaceHolder.normalizeMaterial(type.name()), stack);
+             getConfig().save(getFile());
+
+             switch (type){
+                 case BLOCK: {crate.setBlock(stack.getType()); break;}
+                 case FLOOR: {crate.setFloor(stack.getType()); break;}
+                 case KEY: {crate.setKey(stack); break;}
+             }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

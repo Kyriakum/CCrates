@@ -4,6 +4,8 @@ import kyriakum.ccrates.ccrates.CCrates;
 import kyriakum.ccrates.ccrates.entities.Crate;
 import kyriakum.ccrates.ccrates.guis.crateguis.CrateInstancesGUI;
 import kyriakum.ccrates.ccrates.guis.crateguis.CrateMenuGUI;
+import kyriakum.ccrates.ccrates.guis.crateguis.SettingsGUI;
+import kyriakum.ccrates.ccrates.guis.crateguis.changevalueguis.ChangeValueType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -87,7 +89,7 @@ public class GUIInteractListener implements Listener {
             });
 
 
-            if (!isInv.get()) return;
+            if (!isInv.get()) continue;
 
 
             Player player = (Player) e.getWhoClicked();
@@ -100,12 +102,37 @@ public class GUIInteractListener implements Listener {
                 } else {
                     //TODO
                 }
-                System.out.println(integ);
-
                 e.setCancelled(true);
-                return;
+                break;
             }
         }
         }
 
+
+        @EventHandler
+    public void SettingsGUIInteract(InventoryClickEvent e){
+
+            AtomicBoolean isInv = new AtomicBoolean(false);
+
+            for(Crate crate : cCrates.getCrateManager().getCrates()){
+            if(e.getInventory().equals(crate.getMenuGUI().getSettingsGUI().getInventory())){
+                isInv.set(true);
+            }
+            if(!isInv.get()) continue;
+
+            if(e.getCurrentItem()==null) return;
+            SettingsGUI settingsGUI = crate.getMenuGUI().getSettingsGUI();
+            Player player = (Player) e.getWhoClicked();
+            if(e.getCurrentItem().equals(settingsGUI.blockStack())){
+                player.openInventory(settingsGUI.getValueGUI(ChangeValueType.BLOCK).getInventory());
+            } else if(e.getCurrentItem().equals(settingsGUI.floorStack())){
+                player.openInventory(settingsGUI.getValueGUI(ChangeValueType.FLOOR).getInventory());
+            } else if(e.getCurrentItem().equals(settingsGUI.keyStack())){
+                player.openInventory(settingsGUI.getValueGUI(ChangeValueType.KEY).getInventory());
+            }
+
+            e.setCancelled(true);
+                break;
+        }
+        }
 }

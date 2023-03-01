@@ -2,6 +2,7 @@ package kyriakum.ccrates.ccrates.animations;
 import kyriakum.ccrates.ccrates.api.PlayerOpenCrateEntityEvent;
 import kyriakum.ccrates.ccrates.entities.CrateEntity;
 import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
 
 public abstract class Animation {
 
@@ -21,7 +22,6 @@ public abstract class Animation {
         Bukkit.getPluginManager().callEvent(e);
     }
 
-
     public abstract void despawn();
 
     public static Animation getCrateAnimation(CrateEntity entity){
@@ -32,4 +32,5 @@ public abstract class Animation {
             }
             return null;
     }
+
 }

@@ -84,4 +84,20 @@ public class Crate {
     }
 
     public CrateMenuGUI getMenuGUI() {return menuGUI;}
+
+    public void setBlock(Material block) {
+        this.block = block;
+    }
+
+    public void setFloor(Material floor) {
+        this.floor = floor;
+    }
+
+    public void setKey(ItemStack key) {
+        this.key = key;
+    }
+
+    public void setAnimationType(AnimationType type) {
+        this.type = type;
+    }
 }
