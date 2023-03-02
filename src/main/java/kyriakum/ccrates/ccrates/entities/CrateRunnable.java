@@ -13,6 +13,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CrateRunnable extends BukkitRunnable {
 
@@ -20,7 +22,7 @@ public class CrateRunnable extends BukkitRunnable {
     private CrateInstance instance;
     public final int SECONDS = 20;
     private int counter = 0;
-    private final BlockFace mainChestFace;
+    private BlockFace mainChestFace;
     private List<CrateEntity> entities;
     private Region2D region2D;
     private Location playerLocation;
@@ -32,8 +34,13 @@ public class CrateRunnable extends BukkitRunnable {
         this.player = player;
         playerLocation = player.getLocation();
         this.instance = instance;
+
+        mainChestFace = null;
+        if(getInstance().getCrate().getBlock().name().contains("CHEST")){
         Directional directional = (Directional) instance.getLocation().getBlock().getBlockData();
         mainChestFace = directional.getFacing();
+        }
+
         entities = new ArrayList<>();
         setChestEntities();
         region2D = new Region2D(instance.getLocation().clone().add(-3,-1,-3), instance.getLocation().clone().add(3,-1,3), this);
@@ -78,11 +85,19 @@ public class CrateRunnable extends BukkitRunnable {
     }
 
     private void setChestEntities(){
-        entities.add(new CrateEntity(instance.getLocation().clone().subtract(3,0,0).getBlock().getLocation(), BlockFace.EAST, this));
-        entities.add(new CrateEntity(instance.getLocation().clone().subtract(0,0,3).getBlock().getLocation(), BlockFace.SOUTH, this));
-        entities.add(new CrateEntity(instance.getLocation().clone().add(3,0,0).getBlock().getLocation(), BlockFace.WEST, this));
-        entities.add(new CrateEntity(instance.getLocation().clone().add(0,0,3).getBlock().getLocation(), BlockFace.NORTH, this));
-    }
+        if(getInstance().getCrate().getBlock().name().contains("CHEST")) {
+            entities.add(new CrateEntity(instance.getLocation().clone().subtract(3, 0, 0).getBlock().getLocation(), BlockFace.EAST, this));
+            entities.add(new CrateEntity(instance.getLocation().clone().subtract(0, 0, 3).getBlock().getLocation(), BlockFace.SOUTH, this));
+            entities.add(new CrateEntity(instance.getLocation().clone().add(3, 0, 0).getBlock().getLocation(), BlockFace.WEST, this));
+            entities.add(new CrateEntity(instance.getLocation().clone().add(0, 0, 3).getBlock().getLocation(), BlockFace.NORTH, this));
+        } else {
+            entities.add(new CrateEntity(instance.getLocation().clone().subtract(3, 0, 0).getBlock().getLocation(), null, this));
+            entities.add(new CrateEntity(instance.getLocation().clone().subtract(0, 0, 3).getBlock().getLocation(), null, this));
+            entities.add(new CrateEntity(instance.getLocation().clone().add(3, 0, 0).getBlock().getLocation(), null, this));
+            entities.add(new CrateEntity(instance.getLocation().clone().add(0, 0, 3).getBlock().getLocation(), null, this));
+
+        }
+        }
 
     public CrateInstance getInstance() {
         return instance;
@@ -94,6 +109,7 @@ public class CrateRunnable extends BukkitRunnable {
 
 
     public void resetArea(){
+
         if(player.isOnline()) player.teleport(playerLocation);
 
        entities.forEach(CrateEntity::despawn);
@@ -105,11 +121,13 @@ public class CrateRunnable extends BukkitRunnable {
         HandlerList.unregisterAll(listener);
     }
 
-    private void setMainBlock(){
+    private void setMainBlock() {
         instance.getLocation().getBlock().setType(instance.getCrate().getBlock());
-        Directional dir = (Directional) instance.getLocation().getBlock().getBlockData();
-        dir.setFacing(mainChestFace);
-        instance.getLocation().getBlock().setBlockData(dir);
+        if (mainChestFace != null) {
+            Directional dir = (Directional) instance.getLocation().getBlock().getBlockData();
+            dir.setFacing(mainChestFace);
+            instance.getLocation().getBlock().setBlockData(dir);
+        }
     }
 
     public boolean allOpened(){

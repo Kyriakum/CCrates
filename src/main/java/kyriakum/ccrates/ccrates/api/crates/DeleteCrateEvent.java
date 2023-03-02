@@ -1,17 +1,16 @@
-package kyriakum.ccrates.ccrates.api;
+package kyriakum.ccrates.ccrates.api.crates;
 
 import kyriakum.ccrates.ccrates.entities.Crate;
-import kyriakum.ccrates.ccrates.entities.CrateInstance;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class RemoveInstanceEvent extends Event {
+public class DeleteCrateEvent extends Event {
 
     private static final HandlerList HANDLERS_LIST = new HandlerList();
-    private CrateInstance instance;
+    private Crate crate;
 
-    public RemoveInstanceEvent(CrateInstance instance){
-        this.instance = instance;
+    public DeleteCrateEvent(Crate crate){
+        this.crate = crate;
     }
 
     @Override
@@ -23,7 +22,10 @@ public class RemoveInstanceEvent extends Event {
         return HANDLERS_LIST;
     }
 
-    public CrateInstance getCrateInstance() {
-        return instance;
+
+
+    public Crate getCrate() {
+        return crate;
     }
+
 }

@@ -1,8 +1,8 @@
 package kyriakum.ccrates.ccrates.managers.filemanagers;
 
 import kyriakum.ccrates.ccrates.CCrates;
-import kyriakum.ccrates.ccrates.api.NewInstanceEvent;
-import kyriakum.ccrates.ccrates.api.RemoveInstanceEvent;
+import kyriakum.ccrates.ccrates.api.instances.NewInstanceEvent;
+import kyriakum.ccrates.ccrates.api.instances.RemoveInstanceEvent;
 import kyriakum.ccrates.ccrates.entities.Crate;
 import kyriakum.ccrates.ccrates.entities.CrateInstance;
 import org.bukkit.Bukkit;
@@ -133,5 +133,11 @@ public class LocationManager extends FileManager {
 
     public List<CrateInstance> getCratesInstances() {
         return cratesInstances;
+    }
+
+    public void changeBlocks(Crate crate){
+    for(CrateInstance instance : getCrateInstances(crate)){
+        instance.getLocation().getBlock().setType(crate.getBlock());
+        }
     }
 }

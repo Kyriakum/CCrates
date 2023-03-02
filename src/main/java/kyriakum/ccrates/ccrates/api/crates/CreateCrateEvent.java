@@ -1,20 +1,16 @@
-package kyriakum.ccrates.ccrates.api;
+package kyriakum.ccrates.ccrates.api.crates;
 
 import kyriakum.ccrates.ccrates.entities.Crate;
-import kyriakum.ccrates.ccrates.entities.contents.Content;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class AddContentEvent extends Event {
+public class CreateCrateEvent extends Event {
 
     private static final HandlerList HANDLERS_LIST = new HandlerList();
     private Crate crate;
-    private Content content;
 
-    public AddContentEvent(Crate crate, Content content){
+    public CreateCrateEvent(Crate crate){
         this.crate = crate;
-        this.content = content;
     }
 
     @Override
@@ -32,7 +28,4 @@ public class AddContentEvent extends Event {
         return crate;
     }
 
-    public Content getContent() {
-        return content;
-    }
 }

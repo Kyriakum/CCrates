@@ -45,9 +45,11 @@ public class CrateEntity {
     public void spawn(){
         Block block = getLocation().getBlock();
         block.setType(running.getInstance().getCrate().getBlock());
-        Directional directional = (Directional) block.getBlockData();
-        directional.setFacing(face);
-        block.setBlockData(directional);
+        if(face!=null) {
+            Directional directional = (Directional) block.getBlockData();
+            directional.setFacing(face);
+            block.setBlockData(directional);
+        }
         getLocation().getWorld().spawnParticle(Particle.ITEM_CRACK, getLocation().clone().add(.5,.5,.5), 0,0,0,0,new ItemStack(Material.CHEST));
         getLocation().getWorld().playSound(getLocation(), Sound.BLOCK_WOOD_PLACE, 1, 1);
 

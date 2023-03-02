@@ -1,26 +1,24 @@
 package kyriakum.ccrates.ccrates.animations;
 
+import kyriakum.ccrates.ccrates.CCrates;
 import kyriakum.ccrates.ccrates.entities.CrateEntity;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.network.protocol.game.PacketPlayOutBlockAction;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_19_R1.util.CraftMagicNumbers;
 import org.bukkit.entity.Item;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
-import java.util.Arrays;
 
 public class StdAnimation extends Animation {
 
     private Item item;
 
-    public StdAnimation(CrateEntity entity) {
-        super(entity);
+    public StdAnimation(CCrates cCrates, CrateEntity entity) {
+        super(cCrates, entity, 3);
     }
+
 
     @Override
     public void start() {
@@ -28,9 +26,9 @@ public class StdAnimation extends Animation {
         super.start();
         PacketPlayOutBlockAction packet = new PacketPlayOutBlockAction(new BlockPosition(getCrateEntity().getLocation().getBlockX(),getCrateEntity().getLocation().getBlockY(),getCrateEntity().getLocation().getBlockZ()), CraftMagicNumbers.getBlock(getCrateEntity().getRunning().getInstance().getCrate().getBlock()),1 ,1);
         Bukkit.getOnlinePlayers().forEach(player -> ((CraftPlayer) player).getHandle().b.a(packet));
-        getCrateEntity().getContent().givePlayer(getCrateEntity().getPlayer());
         spawnItem();
         getCrateEntity().setOpened();
+        setDone();
     }
 
     @Override

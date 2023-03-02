@@ -2,10 +2,9 @@ package kyriakum.ccrates.ccrates.managers.filemanagers;
 
 import kyriakum.ccrates.ccrates.CCrates;
 import kyriakum.ccrates.ccrates.animations.AnimationType;
-import kyriakum.ccrates.ccrates.api.AddContentEvent;
-import kyriakum.ccrates.ccrates.api.CreateCrateEvent;
-import kyriakum.ccrates.ccrates.api.DeleteCrateEvent;
-import kyriakum.ccrates.ccrates.api.RemoveContentEvent;
+import kyriakum.ccrates.ccrates.api.contents.AddContentEvent;
+import kyriakum.ccrates.ccrates.api.crates.*;
+import kyriakum.ccrates.ccrates.api.contents.RemoveContentEvent;
 import kyriakum.ccrates.ccrates.entities.Crate;
 import kyriakum.ccrates.ccrates.entities.contents.CmdContent;
 import kyriakum.ccrates.ccrates.entities.contents.Content;
@@ -157,7 +156,6 @@ public class ConfigManager extends FileManager {
                     getConfig().set("Crates." + crate.getName() + ".Items." + id, null);
                     getConfig().save(getFile());
                     RemoveContentEvent e = new RemoveContentEvent(crate, crate.getContent(id));
-
                     crate.removeContent(id);
                     Bukkit.getPluginManager().callEvent(e);
                 } catch (IOException e) {
@@ -208,18 +206,43 @@ public class ConfigManager extends FileManager {
     public void changeValue(Crate crate, ChangeValueType type, ItemStack stack){
 
          try {
-             getConfig().set("Crates." + crate.getName() + "." + PlaceHolder.normalizeMaterial(type.name()), stack);
-             getConfig().save(getFile());
-
              switch (type){
-                 case BLOCK: {crate.setBlock(stack.getType()); break;}
-                 case FLOOR: {crate.setFloor(stack.getType()); break;}
-                 case KEY: {crate.setKey(stack); break;}
+                 case BLOCK: { getConfig().set("Crates." + crate.getName() + ".Block", stack.getType().name());
+                     CrateBlockChangeEvent e = new CrateBlockChangeEvent(crate, crate.getBlock(), stack.getType());
+                     crate.setBlock(stack.getType());
+                     getCCrates().getLocationManager().changeBlocks(crate);
+                     Bukkit.getPluginManager().callEvent(e);
+                     break;
+                 }
+                 case FLOOR: { getConfig().set("Crates." + crate.getName() + ".Floor", stack.getType().name());
+                     CrateFloorChangeEvent e = new CrateFloorChangeEvent(crate, crate.getFloor(), stack.getType());
+                     crate.setFloor(stack.getType());
+                     Bukkit.getPluginManager().callEvent(e);
+                     break;
+                 }
+                 case KEY: { getConfig().set("Crates." + crate.getName() + ".Key.Item", stack.getType().name());
+                     getConfig().set("Crates." + crate.getName() + ".Key.Name", stack.getItemMeta().getDisplayName());
+                     getConfig().set("Crates." + crate.getName() + ".Key.Lore", stack.getItemMeta().getLore());
+                     CrateKeyChangeEvent e = new CrateKeyChangeEvent(crate, crate.getKey(), stack);
+                     crate.setKey(stack);
+                     Bukkit.getPluginManager().callEvent(e);
+                     break;}
              }
+             getConfig().save(getFile());
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
+    public void changeAnimation(Crate crate, AnimationType type){
+        try{
+            getConfig().set("Crates." + crate.getName() + ".Animation", type.name());
+            getConfig().save(getFile());
+            CrateAnimationChangeEvent e = new CrateAnimationChangeEvent(crate, crate.getAnimationType(), type);
+            crate.setAnimationType(type);
+            Bukkit.getPluginManager().callEvent(e);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
 }

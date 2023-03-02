@@ -1,4 +1,4 @@
-package kyriakum.ccrates.ccrates.api;
+package kyriakum.ccrates.ccrates.api.contents;
 
 import kyriakum.ccrates.ccrates.entities.Crate;
 import kyriakum.ccrates.ccrates.entities.contents.Content;
@@ -6,13 +6,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class RemoveContentEvent extends Event {
+public class AddContentEvent extends Event {
 
     private static final HandlerList HANDLERS_LIST = new HandlerList();
     private Crate crate;
     private Content content;
 
-    public RemoveContentEvent(Crate crate, Content content){
+    public AddContentEvent(Crate crate, Content content){
         this.crate = crate;
         this.content = content;
     }

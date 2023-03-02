@@ -2,11 +2,10 @@ package kyriakum.ccrates.ccrates.guis.crateguis;
 
 import kyriakum.ccrates.ccrates.CCrates;
 import kyriakum.ccrates.ccrates.entities.Crate;
-import kyriakum.ccrates.ccrates.guis.crateguis.changevalueguis.ChangeValue;
-import kyriakum.ccrates.ccrates.guis.crateguis.changevalueguis.ChangeValueGUI;
-import kyriakum.ccrates.ccrates.guis.crateguis.changevalueguis.ChangeValueType;
+import kyriakum.ccrates.ccrates.guis.crateguis.changevalueguis.*;
 import kyriakum.ccrates.ccrates.utils.PlaceHolder;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -32,9 +31,11 @@ public class SettingsGUI {
 
     public void setupInv(){
         settings = Bukkit.createInventory(null, SIZE, crate.getName() + " Settings");
-        settings.setItem(10,blockStack());
-        settings.setItem(12,floorStack());
-        settings.setItem(14,keyStack());
+        settings.setItem(9,blockStack());
+        settings.setItem(11,floorStack());
+        settings.setItem(13,keyStack());
+        settings.setItem(15,animStack());
+        settings.setItem(17,contentsStack());
     }
 
 
@@ -45,6 +46,8 @@ public class SettingsGUI {
         changeValueGUIS.add(new ChangeValueGUI(cCrates, crate, ChangeValueType.BLOCK, new ItemStack(crate.getBlock())));
         changeValueGUIS.add(new ChangeValueGUI(cCrates, crate, ChangeValueType.FLOOR, new ItemStack(crate.getFloor())));
         changeValueGUIS.add(new ChangeValueGUI(cCrates, crate, ChangeValueType.KEY, crate.getKey()));
+        changeValueGUIS.add(new ChangeAnimationGUI(crate));
+        changeValueGUIS.add(new ChangeContentsGUI(crate));
     }
 
     public ItemStack blockStack(){
@@ -65,9 +68,27 @@ public class SettingsGUI {
         return stack;
     }
     public ItemStack keyStack(){
-        ItemStack stack = new ItemStack(crate.getBlock());
+        ItemStack stack = crate.getKey().clone();
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName("Current Key: " + crate.getKey().getItemMeta().getDisplayName());
+        meta.setLore(Arrays.asList("Click Here to Change!"));
+        stack.setItemMeta(meta);
+        return stack;
+    }
+
+    public ItemStack animStack(){
+        ItemStack stack = crate.getAnimationType().getItem().clone();
+        ItemMeta meta = stack.getItemMeta();
+        meta.setDisplayName("Current Animation: " + crate.getAnimationType().getDisplayName());
+        meta.setLore(Arrays.asList("Click Here to Change!"));
+        stack.setItemMeta(meta);
+        return stack;
+    }
+
+    public ItemStack contentsStack(){
+        ItemStack stack = new ItemStack(Material.SHULKER_BOX);
+        ItemMeta meta = stack.getItemMeta();
+        meta.setDisplayName("Contents: " + crate.getContents().size());
         meta.setLore(Arrays.asList("Click Here to Change!"));
         stack.setItemMeta(meta);
         return stack;
@@ -78,5 +99,9 @@ public class SettingsGUI {
             if(changeValueGUI.getType()==type) return changeValueGUI;
         }
         return null;
+    }
+
+    public List<ChangeValue> getValueGUIS() {
+        return changeValueGUIS;
     }
 }

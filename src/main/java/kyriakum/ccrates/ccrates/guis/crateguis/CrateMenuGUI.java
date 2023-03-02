@@ -50,7 +50,7 @@ public class CrateMenuGUI {
     private void setupCratePickInv(){
         crateMenuGUI = Bukkit.createInventory(null, SIZE, "Crate " + crate.getName());
         crateMenuGUI.setItem(10, crateInstances());
-        crateMenuGUI.setItem(15, settingsItem());
+        crateMenuGUI.setItem(16, settingsItem());
     }
 
     public Inventory getMainGUI() {

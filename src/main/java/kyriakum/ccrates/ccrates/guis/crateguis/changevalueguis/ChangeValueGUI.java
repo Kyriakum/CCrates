@@ -30,13 +30,14 @@ public class ChangeValueGUI implements ChangeValue {
     }
 
 
-    public void accept(){
-       ItemStack accept = inventory.getItem(22);
+    public boolean accept(ItemStack accept){
+       if(accept==null) return false;
        cCrates.getConfigManager().changeValue(crate,type,accept);
+        return true;
     }
 
     public void setupInv(){
-        inventory = Bukkit.createInventory(null, SIZE, "Change Value");
+        inventory = Bukkit.createInventory(null, SIZE, crate.getName() + " - Change " + PlaceHolder.normalizeMaterial(type.name()));
         for(int i = 0;i<SIZE; i++){
             inventory.setItem(i, emptySpace());
         }
@@ -69,5 +70,9 @@ public class ChangeValueGUI implements ChangeValue {
 
     public Inventory getInventory() {
         return inventory;
+    }
+    @Override
+    public Crate getCrate() {
+        return crate;
     }
 }

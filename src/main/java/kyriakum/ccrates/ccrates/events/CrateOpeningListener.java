@@ -52,9 +52,10 @@ public class CrateOpeningListener implements Listener {
             p.sendMessage(ChatColor.GREEN + "Poof!");
             entity.getAnimation().start();
             if(running.allOpened())
-                Bukkit.getScheduler().runTaskLater(cCrates, () -> running.getInstance().stopRunnable(), 3*running.SECONDS);
+                Bukkit.getScheduler().runTaskLater(cCrates, () -> running.getInstance().stopRunnable(), entity.getAnimation().getDelay()*running.SECONDS);
         }
         e.setCancelled(true);
+        return;
     }
     @EventHandler
     public void onLeave(PlayerQuitEvent e){
@@ -72,27 +73,4 @@ public class CrateOpeningListener implements Listener {
         }
     }
 
-    private ItemStack drawRandomItem(){
-        List<Content> contents = new ArrayList<>();
-        for(Content content : running.getInstance().getCrate().getContents()){
-            for(int i = 0; i<content.getPercentage();i++){
-                contents.add(content);
-            }
-        }
-        Collections.shuffle(contents);
-        Content chosen = (Content) contents.toArray()[0];
-        return chosen.getContent();
-    }
-
-    private void makeMagicOpening(Block block){
-        ItemStack item = drawRandomItem();
-        Location loc = block.getLocation();
-        PacketPlayOutBlockAction packet = new PacketPlayOutBlockAction(new BlockPosition(loc.getBlockX(),loc.getBlockY(),loc.getBlockZ()), CraftMagicNumbers.getBlock(Material.CHEST),1 ,1);
-        ((CraftPlayer) running.getPlayer()).getHandle().b.a(packet);
-        Item dropped = running.getPlayer().getWorld().dropItem(new Location(loc.getWorld(), loc.getBlockX()+0.5, loc.getBlockY()+0.8, loc.getBlockZ()+0.5), item);
-        dropped.setVelocity(new Vector(0,0.1,0));
-        dropped.setCustomNameVisible(true);
-        dropped.setCustomName(item.getItemMeta().getDisplayName());
-        dropped.setPickupDelay(9999);
-    }
 }

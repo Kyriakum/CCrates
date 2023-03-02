@@ -19,24 +19,33 @@ public final class CCrates extends JavaPlugin {
     private LocationManager locationManager;
     private CrateManager crateManager;
     private MainGUI mainGUI;
+    private static CCrates cCrates;
 
     @Override
     public void onEnable() {
-        //Setup Managers
-        configManager = new ConfigManager(this);
-        crateManager = new CrateManager(this);
-        locationManager = new LocationManager(this);
-         //Setup Commands
+
+        cCrates = this;
+        load();
+
+        //Setup Commands
         new CCratesCommands(this);
 
-        mainGUI = new MainGUI(this);
-        crateManager.loadGUIS();
         //Setup Listeners
         Bukkit.getPluginManager().registerEvents(new PlayerInteract(this), this);
         Bukkit.getPluginManager().registerEvents(new SetCrateListener(this), this);
         Bukkit.getPluginManager().registerEvents(new GUIInteractListener(this), this);
         Bukkit.getPluginManager().registerEvents(new CCratesEventsListener(this), this);
     }
+    public void load(){
+        //Setup Managers
+        configManager = new ConfigManager(this);
+        crateManager = new CrateManager(this);
+        locationManager = new LocationManager(this);
+
+        mainGUI = new MainGUI(this);
+        crateManager.loadGUIS();
+    }
+
 
     @Override
     public void onDisable() {
@@ -63,6 +72,10 @@ public final class CCrates extends JavaPlugin {
                 crateInstance.stopRunnable();
             }
         }
+    }
+
+    public static CCrates getCCrates(){
+        return cCrates;
     }
 
     public void reloadGUI() { mainGUI = new MainGUI(this);}

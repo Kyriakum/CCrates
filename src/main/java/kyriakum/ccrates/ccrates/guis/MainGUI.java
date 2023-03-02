@@ -11,82 +11,24 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-public class MainGUI implements MultiInventory {
+public class MainGUI extends MultiInventory {
 
     private Map<Integer, Inventory> maingui;
     private final int SIZE = 9*3;
     private final CCrates cCrates;
 
     public MainGUI(CCrates cCrates){
+        super("Crates GUI");
         this.cCrates = cCrates;
         setupInvs();
+
     }
 
-
-    public Inventory getInventory(int page) {
-        return maingui.get(page);
-    }
-
-    public Integer getPage(Inventory inventory){
-        for(Integer inte : maingui.keySet()){
-            if(maingui.get(inte).equals(inventory)) return inte;
-        }
-    return -1;
-    }
-
-    public void setupInvs(){
-        maingui = new HashMap<>();
+    @Override
+    protected List<ItemStack> getInvStacks() {
         List<ItemStack> crates = new ArrayList<>();
         for(Crate crate : cCrates.getCrateManager().getCrates()) crates.add(loadItem(crate));
-        int page = 1;
-        while(crates.size()>SIZE){
-            List<ItemStack> thisinv = new ArrayList<>();
-            if(page==1){
-                for (int i = 0; i < SIZE - 1; i++) {
-                    thisinv.add(crates.get(0));
-                    crates.remove(0);
-                }
-            } else {
-                for (int i = 0; i < SIZE - 2; i++) {
-                    thisinv.add(crates.get(0));
-                    crates.remove(0);
-                }
-            }
-            maingui.put(page, createInventory(page++, thisinv));
-        }
-        if(crates.size()>=1|| page==1) maingui.put(page, createInventory(page, crates));
-
-    }
-
-    public Inventory createInventory(int page, List<ItemStack> crates){
-        Inventory inv = Bukkit.createInventory(null, SIZE, "Crates GUI - Page " + page);
-        int itemcounter = 0;
-        if(crates.size()==SIZE-1) {
-            inv.setItem(26, nextPage());
-            for (int i = 0; i < inv.getSize(); i++) {
-                if (inv.getItem(i) != null) continue;
-                inv.setItem(i, crates.get(itemcounter++));
-            }
-        }
-        else if(crates.size()==SIZE-2){
-            inv.setItem(18, previousPage());
-            inv.setItem(26, nextPage());
-            for(int i = 0; i<inv.getSize();i++){
-                if(inv.getItem(i)!=null) continue;
-                else inv.setItem(i, crates.get(itemcounter++));
-            }
-        } else if(page>1){
-            inv.setItem(18, previousPage());
-            for(int i = 0; i<crates.size();i++){
-                if(inv.getItem(i)!=null) continue;
-                inv.setItem(i, crates.get(itemcounter++));
-            }
-        } else {
-            for(int i = 0; i<crates.size();i++){
-                inv.setItem(i, crates.get(i));
-            }
-        }
-        return inv;
+        return crates;
     }
 
     public ItemStack loadItem(Crate crate){
@@ -103,25 +45,4 @@ public class MainGUI implements MultiInventory {
         return item;
     }
 
-    public ItemStack nextPage(){
-        ItemStack item = new ItemStack(Material.ACACIA_SIGN);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("Next Page");
-        meta.setLore(Arrays.asList("Click to go to next page"));
-        item.setItemMeta(meta);
-        return item;
-    }
-
-    public ItemStack previousPage(){
-        ItemStack item = new ItemStack(Material.ACACIA_SIGN);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("Previous Page");
-        meta.setLore(Arrays.asList("Click to go to previous page"));
-        item.setItemMeta(meta);
-        return item;
-    }
-
-    public Map<Integer, Inventory> getGUI() {
-        return maingui;
-    }
 }
