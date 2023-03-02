@@ -47,6 +47,7 @@ public class MagicAnimation extends Animation{
                 player.getWorld().playSound(loc1, Sound.ENTITY_GENERIC_EXPLODE, 5, 1);
                 spawnItem();
                 task.cancel();
+                setDone();
                 return;
             } else {
                 player.getWorld().spawnParticle(Particle.DRAGON_BREATH, loc1,0,0,0,0);

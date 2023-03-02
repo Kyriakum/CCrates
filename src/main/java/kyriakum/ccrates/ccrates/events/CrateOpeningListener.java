@@ -48,7 +48,7 @@ public class CrateOpeningListener implements Listener {
 
         CrateEntity entity = running.getChestBlock(e.getClickedBlock().getLocation());
 
-        if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock()!=null && entity!=null){
+        if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock()!=null && entity!=null && !entity.isOpened()){
             p.sendMessage(ChatColor.GREEN + "Poof!");
             entity.getAnimation().start();
             if(running.allOpened())
