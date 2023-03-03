@@ -1,6 +1,7 @@
 package kyriakum.ccrates.ccrates.guis;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -15,7 +16,7 @@ public abstract class MultiInventory {
     private final String title;
 
     public MultiInventory(String title){
-        this.title = title;
+        this.title = ChatColor.DARK_PURPLE + title;
     }
 
     public Inventory getInventory(int page){

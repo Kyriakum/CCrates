@@ -3,6 +3,7 @@ package kyriakum.ccrates.ccrates.guis.crateguis.changevalueguis;
 import kyriakum.ccrates.ccrates.animations.AnimationType;
 import kyriakum.ccrates.ccrates.entities.Crate;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -56,7 +57,7 @@ public class ChangeAnimationGUI implements ChangeValue {
 
 
     private void setupInv(){
-        inventory = Bukkit.createInventory(null, SIZE, "Choose Animation for " + crate.getName());
+        inventory = Bukkit.createInventory(null, SIZE, ChatColor.DARK_PURPLE + "Choose Animation for " + crate.getName());
         for(ItemStack stack : getAnimationStacks()){
             inventory.addItem(stack);
         }

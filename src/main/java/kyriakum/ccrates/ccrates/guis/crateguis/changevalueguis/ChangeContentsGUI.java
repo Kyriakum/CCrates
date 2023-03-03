@@ -5,6 +5,7 @@ import kyriakum.ccrates.ccrates.entities.Crate;
 import kyriakum.ccrates.ccrates.entities.contents.Content;
 import kyriakum.ccrates.ccrates.guis.MultiInventory;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,7 +20,7 @@ public class ChangeContentsGUI extends MultiInventory implements ChangeValue {
     private Crate crate;
 
     public ChangeContentsGUI(Crate crate) {
-        super(crate.getName() + " Contents");
+        super(ChatColor.DARK_PURPLE +  crate.getName() + " Contents");
         type = ChangeValueType.CONTENTS;
         this.crate = crate;
         setupInvs();

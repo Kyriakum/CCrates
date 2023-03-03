@@ -5,6 +5,7 @@ import kyriakum.ccrates.ccrates.entities.Crate;
 import kyriakum.ccrates.ccrates.entities.CrateInstance;
 import kyriakum.ccrates.ccrates.guis.MultiInventory;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -18,7 +19,7 @@ public class CrateInstancesGUI extends MultiInventory {
     private CCrates cCrates;
 
     public CrateInstancesGUI(CCrates cCrates, Crate crate){
-        super("Crate Instances");
+        super(ChatColor.DARK_PURPLE + "Crate Instances");
         this.crate = crate;
         this.cCrates = cCrates;
         setupInvs();
@@ -37,10 +38,9 @@ public class CrateInstancesGUI extends MultiInventory {
     public ItemStack loadInstanceItem(CrateInstance crate){
         ItemStack item = new ItemStack(crate.getCrate().getBlock());
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("Instance " + crate.getId());
+        meta.setDisplayName(ChatColor.GRAY + "Instance " + ChatColor.GOLD + crate.getId());
         meta.setLore(Arrays.asList(
-                "Click to edit Instance" + crate.getId(),
-                "Location: " + crate.getLocation().getBlockX() +", " + crate.getLocation().getBlockY() + ", " + crate.getLocation().getBlockZ()));
+                ChatColor.GOLD + "Location: (" + crate.getLocation().getBlockX() +", " + crate.getLocation().getBlockY() + ", " + crate.getLocation().getBlockZ() + ")"));
         item.setItemMeta(meta);
 
         return item;

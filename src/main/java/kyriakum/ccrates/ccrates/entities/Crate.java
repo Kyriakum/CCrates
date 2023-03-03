@@ -100,4 +100,9 @@ public class Crate {
     public void setAnimationType(AnimationType type) {
         this.type = type;
     }
+
+    public boolean isChest(){
+        if(getBlock().name().contains("CHEST")) return true;
+        return false;
+    }
 }

@@ -38,6 +38,10 @@ public class CCratesCommands implements CommandExecutor {
       if(sender instanceof Player){
           Player player = (Player) sender;
 
+          if(!player.hasPermission("ccrates.admin")){
+              player.sendMessage(cCrates.getMessagesManager().getNoPermission());
+              return false;
+          }
           if(args.length == 0){
             //OpenInventory
               player.openInventory(cCrates.getMainGUI().getInventory(1));

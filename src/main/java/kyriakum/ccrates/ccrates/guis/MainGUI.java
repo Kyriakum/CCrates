@@ -4,6 +4,7 @@ import kyriakum.ccrates.ccrates.CCrates;
 import kyriakum.ccrates.ccrates.entities.Crate;
 import kyriakum.ccrates.ccrates.utils.PlaceHolder;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -13,12 +14,11 @@ import java.util.*;
 
 public class MainGUI extends MultiInventory {
 
-    private Map<Integer, Inventory> maingui;
     private final int SIZE = 9*3;
     private final CCrates cCrates;
 
     public MainGUI(CCrates cCrates){
-        super("Crates GUI");
+        super(ChatColor.DARK_PURPLE + "Crates Menu");
         this.cCrates = cCrates;
         setupInvs();
 
@@ -34,13 +34,13 @@ public class MainGUI extends MultiInventory {
     public ItemStack loadItem(Crate crate){
         ItemStack item = new ItemStack(crate.getBlock());
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(crate.getName());
+        meta.setDisplayName(ChatColor.GOLD + crate.getName());
         meta.setLore(Arrays.asList(
-                "Click to change " + crate.getName(),
-                "Contents: " + crate.getContents().size(),
-                "Floor: " + PlaceHolder.normalizeMaterial(crate.getFloor().name()),
-                "Key: " + crate.getKey().getItemMeta().getDisplayName(),
-                "Live Instances: " + cCrates.getLocationManager().getCrateInstances(crate).size()));
+                ChatColor.GOLD + "Click to change " +ChatColor.GOLD +  crate.getName(),
+                ChatColor.GRAY + "Contents: " +ChatColor.GOLD +  crate.getContents().size(),
+                ChatColor.GRAY + "Floor: " +ChatColor.GOLD +  PlaceHolder.normalizeMaterial(crate.getFloor().name()),
+                ChatColor.GRAY + "Key: " + ChatColor.GOLD + crate.getKey().getItemMeta().getDisplayName(),
+                ChatColor.GRAY + "Live Instances: " + ChatColor.GOLD + cCrates.getLocationManager().getCrateInstances(crate).size()));
         item.setItemMeta(meta);
         return item;
     }

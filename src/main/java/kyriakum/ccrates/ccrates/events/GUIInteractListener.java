@@ -6,21 +6,16 @@ import kyriakum.ccrates.ccrates.entities.Crate;
 import kyriakum.ccrates.ccrates.guis.crateguis.CrateInstancesGUI;
 import kyriakum.ccrates.ccrates.guis.crateguis.CrateMenuGUI;
 import kyriakum.ccrates.ccrates.guis.crateguis.SettingsGUI;
-import kyriakum.ccrates.ccrates.guis.crateguis.changevalueguis.ChangeAnimationGUI;
 import kyriakum.ccrates.ccrates.guis.crateguis.changevalueguis.ChangeContentsGUI;
 import kyriakum.ccrates.ccrates.guis.crateguis.changevalueguis.ChangeValue;
 import kyriakum.ccrates.ccrates.guis.crateguis.changevalueguis.ChangeValueType;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class GUIInteractListener implements Listener {
 
@@ -167,7 +162,9 @@ public class GUIInteractListener implements Listener {
 
                 if(value.acceptStack()!=null && e.getCurrentItem().equals(value.acceptStack())){
                 if(value.accept(e.getInventory().getItem(22))){
-                    e.getWhoClicked().closeInventory();
+                    for(Player player : Bukkit.getOnlinePlayers()){
+                        if(player.getOpenInventory().equals(e.getInventory())) player.closeInventory();
+                    }
                 } else {
                     e.getWhoClicked().sendMessage(ChatColor.RED + "Place correct Items!");
                 }
@@ -178,7 +175,9 @@ public class GUIInteractListener implements Listener {
                         if(type.getItem().equals(e.getCurrentItem())) cCrates.getConfigManager().changeAnimation(value.getCrate(), type);
                     }
                     if(value.accept(e.getCurrentItem()))
-                        e.getWhoClicked().closeInventory();
+                        for(Player player : Bukkit.getOnlinePlayers()){
+                            if(player.getOpenInventory().equals(e.getInventory())) player.closeInventory();
+                        }
 
                 }
                 if(value instanceof ChangeContentsGUI){

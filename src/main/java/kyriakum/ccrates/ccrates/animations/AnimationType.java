@@ -1,5 +1,6 @@
 package kyriakum.ccrates.ccrates.animations;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -8,14 +9,14 @@ import java.util.Arrays;
 
 public enum AnimationType {
 
-        STD_ANIMATION(StdStack(), "Standard Animation"),
-        MAGIC_ANIMATION(MagicStack(), "Magic Animation");
+        STD_ANIMATION(StdStack()),
+        MAGIC_ANIMATION(MagicStack());
 
         private ItemStack item;
         private String displayName;
 
-        AnimationType(ItemStack item, String displayName){
-                this.item = item; this.displayName = displayName;
+        AnimationType(ItemStack item){
+                this.item = item; this.displayName = item.getItemMeta().getDisplayName();
         }
 
         public ItemStack getItem() {
@@ -29,8 +30,8 @@ public enum AnimationType {
         private static ItemStack StdStack(){
                 ItemStack stack = new ItemStack(Material.DIAMOND);
                 ItemMeta meta = stack.getItemMeta();
-                meta.setDisplayName("Standard Animation");
-                meta.setLore(Arrays.asList("This is the Standard Animation"));
+                meta.setDisplayName(ChatColor.GRAY.toString() + "Standard Animation");
+                meta.setLore(Arrays.asList(ChatColor.GOLD + "This is the Standard Animation"));
                 stack.setItemMeta(meta);
                 return stack;
         }
@@ -38,8 +39,8 @@ public enum AnimationType {
         private static ItemStack MagicStack(){
                 ItemStack stack = new ItemStack(Material.END_STONE);
                 ItemMeta meta = stack.getItemMeta();
-                meta.setDisplayName("Magic Animation");
-                meta.setLore(Arrays.asList("This is the Magic Animation"));
+                meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Magic Animation");
+                meta.setLore(Arrays.asList(ChatColor.GOLD + "This is the Magic Animation"));
                 stack.setItemMeta(meta);
                 return stack;
         }

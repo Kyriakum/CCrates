@@ -5,6 +5,7 @@ import kyriakum.ccrates.ccrates.entities.Crate;
 import kyriakum.ccrates.ccrates.guis.crateguis.changevalueguis.*;
 import kyriakum.ccrates.ccrates.utils.PlaceHolder;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -30,7 +31,7 @@ public class SettingsGUI {
     }
 
     public void setupInv(){
-        settings = Bukkit.createInventory(null, SIZE, crate.getName() + " Settings");
+        settings = Bukkit.createInventory(null, SIZE, ChatColor.DARK_PURPLE + crate.getName() + " Settings");
         settings.setItem(9,blockStack());
         settings.setItem(11,floorStack());
         settings.setItem(13,keyStack());
@@ -53,8 +54,8 @@ public class SettingsGUI {
     public ItemStack blockStack(){
         ItemStack stack = new ItemStack(crate.getBlock());
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("Current Block: " + PlaceHolder.normalizeMaterial(crate.getBlock().name()));
-        meta.setLore(Arrays.asList("Click Here to Change!"));
+        meta.setDisplayName(ChatColor.GRAY + "Current Block: " + ChatColor.GOLD + PlaceHolder.normalizeMaterial(crate.getBlock().name()));
+        meta.setLore(Arrays.asList(ChatColor.GOLD + "Click Here to Change!"));
         stack.setItemMeta(meta);
         return stack;
     }
@@ -62,16 +63,16 @@ public class SettingsGUI {
     public ItemStack floorStack(){
         ItemStack stack = new ItemStack(crate.getFloor());
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("Current Floor: " + PlaceHolder.normalizeMaterial(crate.getFloor().name()));
-        meta.setLore(Arrays.asList("Click Here to Change!"));
+        meta.setDisplayName(ChatColor.GRAY + "Current Floor: " +ChatColor.GOLD +  PlaceHolder.normalizeMaterial(crate.getFloor().name()));
+        meta.setLore(Arrays.asList(ChatColor.GOLD + "Click Here to Change!"));
         stack.setItemMeta(meta);
         return stack;
     }
     public ItemStack keyStack(){
         ItemStack stack = crate.getKey().clone();
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("Current Key: " + crate.getKey().getItemMeta().getDisplayName());
-        meta.setLore(Arrays.asList("Click Here to Change!"));
+        meta.setDisplayName(ChatColor.GRAY + "Current Key: " + ChatColor.GOLD + crate.getKey().getItemMeta().getDisplayName());
+        meta.setLore(Arrays.asList(ChatColor.GOLD + "Click Here to Change!"));
         stack.setItemMeta(meta);
         return stack;
     }
@@ -79,8 +80,8 @@ public class SettingsGUI {
     public ItemStack animStack(){
         ItemStack stack = crate.getAnimationType().getItem().clone();
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("Current Animation: " + crate.getAnimationType().getDisplayName());
-        meta.setLore(Arrays.asList("Click Here to Change!"));
+        meta.setDisplayName(ChatColor.GRAY + "Current Animation: " +ChatColor.GOLD +  crate.getAnimationType().getDisplayName());
+        meta.setLore(Arrays.asList(ChatColor.GOLD + "Click Here to Change!"));
         stack.setItemMeta(meta);
         return stack;
     }
@@ -88,8 +89,8 @@ public class SettingsGUI {
     public ItemStack contentsStack(){
         ItemStack stack = new ItemStack(Material.SHULKER_BOX);
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("Contents: " + crate.getContents().size());
-        meta.setLore(Arrays.asList("Click Here to Change!"));
+        meta.setDisplayName(ChatColor.GRAY + "Contents: " + ChatColor.GOLD + crate.getContents().size());
+        meta.setLore(Arrays.asList(ChatColor.GOLD + "Click Here to Change!"));
         stack.setItemMeta(meta);
         return stack;
     }

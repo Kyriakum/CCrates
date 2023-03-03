@@ -10,6 +10,7 @@ import kyriakum.ccrates.ccrates.guis.MainGUI;
 import kyriakum.ccrates.ccrates.managers.filemanagers.ConfigManager;
 import kyriakum.ccrates.ccrates.managers.CrateManager;
 import kyriakum.ccrates.ccrates.managers.filemanagers.LocationManager;
+import kyriakum.ccrates.ccrates.managers.filemanagers.MessagesManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,6 +18,7 @@ public final class CCrates extends JavaPlugin {
 
     private ConfigManager configManager;
     private LocationManager locationManager;
+    private MessagesManager messagesManager;
     private CrateManager crateManager;
     private MainGUI mainGUI;
     private static CCrates cCrates;
@@ -41,6 +43,7 @@ public final class CCrates extends JavaPlugin {
         configManager = new ConfigManager(this);
         crateManager = new CrateManager(this);
         locationManager = new LocationManager(this);
+        messagesManager = new MessagesManager(this);
 
         mainGUI = new MainGUI(this);
         crateManager.loadGUIS();
@@ -79,4 +82,8 @@ public final class CCrates extends JavaPlugin {
     }
 
     public void reloadGUI() { mainGUI = new MainGUI(this);}
+
+    public MessagesManager getMessagesManager() {
+        return messagesManager;
+    }
 }

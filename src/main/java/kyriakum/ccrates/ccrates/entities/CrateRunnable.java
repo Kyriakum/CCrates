@@ -13,8 +13,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class CrateRunnable extends BukkitRunnable {
 
@@ -36,7 +34,7 @@ public class CrateRunnable extends BukkitRunnable {
         this.instance = instance;
 
         mainChestFace = null;
-        if(getInstance().getCrate().getBlock().name().contains("CHEST")){
+        if(getInstance().getCrate().isChest()){
         Directional directional = (Directional) instance.getLocation().getBlock().getBlockData();
         mainChestFace = directional.getFacing();
         }
@@ -85,7 +83,7 @@ public class CrateRunnable extends BukkitRunnable {
     }
 
     private void setChestEntities(){
-        if(getInstance().getCrate().getBlock().name().contains("CHEST")) {
+        if(getInstance().getCrate().isChest()) {
             entities.add(new CrateEntity(instance.getLocation().clone().subtract(3, 0, 0).getBlock().getLocation(), BlockFace.EAST, this));
             entities.add(new CrateEntity(instance.getLocation().clone().subtract(0, 0, 3).getBlock().getLocation(), BlockFace.SOUTH, this));
             entities.add(new CrateEntity(instance.getLocation().clone().add(3, 0, 0).getBlock().getLocation(), BlockFace.WEST, this));
@@ -123,7 +121,7 @@ public class CrateRunnable extends BukkitRunnable {
 
     private void setMainBlock() {
         instance.getLocation().getBlock().setType(instance.getCrate().getBlock());
-        if (mainChestFace != null) {
+        if (getInstance().getCrate().isChest()) {
             Directional dir = (Directional) instance.getLocation().getBlock().getBlockData();
             dir.setFacing(mainChestFace);
             instance.getLocation().getBlock().setBlockData(dir);
