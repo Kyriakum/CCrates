@@ -1,6 +1,7 @@
 package kyriakum.ccrates.ccrates.commands;
 
 import kyriakum.ccrates.ccrates.CCrates;
+import kyriakum.ccrates.ccrates.utils.PlaceHolder;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -30,6 +31,7 @@ public class CCratesCommands implements CommandExecutor {
         commands.add(new RemoveCommand(cCrates));
         commands.add(new CreateCommand(cCrates));
         commands.add(new DeleteCommand(cCrates));
+        commands.add(new ReloadCommand(cCrates));
         cCrates.getCommand("ccrates").setExecutor(this);
     }
 
@@ -69,7 +71,7 @@ public class CCratesCommands implements CommandExecutor {
     }
 
     private void invalidSubcommand(Player player){
-        commands.forEach(t -> player.sendMessage(ChatColor.RED + "/ccrates " + t.getName()));
+        commands.forEach(t -> player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "/ccrates " + t.getName()));
     }
 
     private SubCommand get(String name){

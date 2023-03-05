@@ -3,17 +3,7 @@ package kyriakum.ccrates.ccrates.events;
 import kyriakum.ccrates.ccrates.CCrates;
 import kyriakum.ccrates.ccrates.entities.CrateEntity;
 import kyriakum.ccrates.ccrates.entities.CrateRunnable;
-import kyriakum.ccrates.ccrates.entities.contents.Content;
-import net.minecraft.core.BlockPosition;
-import net.minecraft.network.protocol.game.PacketPlayOutBlockAction;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_19_R1.util.CraftMagicNumbers;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,12 +11,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Vector;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class CrateOpeningListener implements Listener {
 
@@ -49,7 +33,6 @@ public class CrateOpeningListener implements Listener {
         CrateEntity entity = running.getChestBlock(e.getClickedBlock().getLocation());
 
         if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK) && e.getClickedBlock()!=null && entity!=null && !entity.isOpened()){
-            p.sendMessage(ChatColor.GREEN + "Poof!");
             entity.getAnimation().start();
             if(running.allOpened())
                 Bukkit.getScheduler().runTaskLater(cCrates, () -> running.getInstance().stopRunnable(), entity.getAnimation().getDelay()*running.SECONDS);

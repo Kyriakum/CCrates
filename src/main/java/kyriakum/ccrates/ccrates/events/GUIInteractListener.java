@@ -118,9 +118,11 @@ public class GUIInteractListener implements Listener {
 
             if(e.getCurrentItem()==null) return;
             SettingsGUI settingsGUI = null;
+            Crate crate1 = null;
             for(Crate crate : cCrates.getCrateManager().getCrates()) {
                 if (e.getInventory().equals(crate.getMenuGUI().getSettingsGUI().getInventory())) {
                     settingsGUI = crate.getMenuGUI().getSettingsGUI();
+                    crate1= crate;
                     break;
                 }
             }
@@ -137,6 +139,15 @@ public class GUIInteractListener implements Listener {
                 player.openInventory(settingsGUI.getValueGUI(ChangeValueType.ANIMATION).getInventory());
             } else if(e.getCurrentItem().equals(settingsGUI.contentsStack())){
                 player.openInventory(settingsGUI.getValueGUI(ChangeValueType.CONTENTS).getInventory());
+            }else if(e.getCurrentItem().equals(settingsGUI.enabledStack())){
+                for(Player player1 : Bukkit.getOnlinePlayers()){
+                    if(player1.getOpenInventory().getTopInventory().equals(settingsGUI.getInventory())) player1.closeInventory();
+                }
+                cCrates.getConfigManager().changeEnabled(crate1);
+               if(crate1.isEnabled()) player.sendMessage(cCrates.getPlaceHolder().replaceCrate(cCrates.getMessagesManager().getCrateEnabled(), crate1));
+               else player.sendMessage(cCrates.getPlaceHolder().replaceCrate(cCrates.getMessagesManager().getCrateDisabled(), crate1));
+
+
             }
 
             e.setCancelled(true);
@@ -146,11 +157,13 @@ public class GUIInteractListener implements Listener {
     public void ChangeValueGUIInteract(InventoryClickEvent e){
 
             ChangeValue value = null;
+            Crate crate = null;
             if(e.getCurrentItem()==null) return;
             for(Crate crate1 : cCrates.getCrateManager().getCrates()){
                 for(ChangeValue changeValue : crate1.getMenuGUI().getSettingsGUI().getValueGUIS()){
                         if(e.getInventory().equals(changeValue.getInventory())) {
                             value = changeValue;
+                            crate = crate1;
                             break;
                         }
                 }
@@ -162,23 +175,43 @@ public class GUIInteractListener implements Listener {
 
                 if(value.acceptStack()!=null && e.getCurrentItem().equals(value.acceptStack())){
                 if(value.accept(e.getInventory().getItem(22))){
+                    e.getWhoClicked().closeInventory();
                     for(Player player : Bukkit.getOnlinePlayers()){
                         if(player.getOpenInventory().equals(e.getInventory())) player.closeInventory();
                     }
+
+                    switch (value.getType()){
+                        case BLOCK: {
+                            e.getWhoClicked().sendMessage(cCrates.getPlaceHolder().replaceMaterial(cCrates.getPlaceHolder().replaceCrate(cCrates.getMessagesManager().getBlockChanged(), crate), e.getInventory().getItem(22).getType()));
+                            break;
+                        }
+                        case FLOOR: {
+                            e.getWhoClicked().sendMessage(cCrates.getPlaceHolder().replaceMaterial(cCrates.getPlaceHolder().replaceCrate(cCrates.getMessagesManager().getFloorChanged(), crate), e.getInventory().getItem(22).getType()));
+                            break;
+                        }
+                        case KEY: {
+                            e.getWhoClicked().sendMessage(cCrates.getPlaceHolder().replaceItem(cCrates.getPlaceHolder().replaceCrate(cCrates.getMessagesManager().getKeyChanged(), crate), e.getInventory().getItem(22)));
+                            break;
+                        }
+                    }
+
                 } else {
-                    e.getWhoClicked().sendMessage(ChatColor.RED + "Place correct Items!");
+                    e.getWhoClicked().sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "Place correct Items!");
                 }
                 }
 
                 if(value.getType()==ChangeValueType.ANIMATION){
-                    for(AnimationType type : AnimationType.values()){
-                        if(type.getItem().equals(e.getCurrentItem())) cCrates.getConfigManager().changeAnimation(value.getCrate(), type);
+                    for(AnimationType type : AnimationType.values()) {
+                        if (type.getItem().equals(e.getCurrentItem())) {
+                            cCrates.getConfigManager().changeAnimation(value.getCrate(), type);
+                            e.getWhoClicked().sendMessage(cCrates.getPlaceHolder().replaceAnimation(cCrates.getPlaceHolder().replaceCrate(cCrates.getMessagesManager().getAnimationChanged(), crate), type.getDisplayName()));
+                        }
                     }
                     if(value.accept(e.getCurrentItem()))
-                        for(Player player : Bukkit.getOnlinePlayers()){
-                            if(player.getOpenInventory().equals(e.getInventory())) player.closeInventory();
+                        e.getWhoClicked().closeInventory();
+                        for (Player player : Bukkit.getOnlinePlayers()) {
+                            if (player.getOpenInventory().equals(e.getInventory())) player.closeInventory();
                         }
-
                 }
                 if(value instanceof ChangeContentsGUI){
                     ChangeContentsGUI gui = (ChangeContentsGUI) value;

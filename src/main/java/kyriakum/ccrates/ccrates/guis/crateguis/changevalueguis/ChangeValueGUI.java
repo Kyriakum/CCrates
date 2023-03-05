@@ -2,7 +2,6 @@ package kyriakum.ccrates.ccrates.guis.crateguis.changevalueguis;
 
 import kyriakum.ccrates.ccrates.CCrates;
 import kyriakum.ccrates.ccrates.entities.Crate;
-import kyriakum.ccrates.ccrates.utils.PlaceHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -33,12 +32,13 @@ public class ChangeValueGUI implements ChangeValue {
 
     public boolean accept(ItemStack accept){
        if(accept==null) return false;
+       if((type==ChangeValueType.FLOOR || type==ChangeValueType.BLOCK) && !accept.getType().isBlock()) return false;
        cCrates.getConfigManager().changeValue(crate,type,accept);
         return true;
     }
 
     public void setupInv(){
-        inventory = Bukkit.createInventory(null, SIZE, ChatColor.DARK_PURPLE +  crate.getName() + " - Change " + PlaceHolder.normalizeMaterial(type.name()));
+        inventory = Bukkit.createInventory(null, SIZE, ChatColor.DARK_PURPLE +  crate.getName() + " - Change " + cCrates.getPlaceHolder().normalizeMaterial(type.name()));
         for(int i = 0;i<SIZE; i++){
             inventory.setItem(i, emptySpace());
         }
@@ -60,7 +60,7 @@ public class ChangeValueGUI implements ChangeValue {
         ItemStack stack = new ItemStack(Material.GREEN_WOOL);
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(ChatColor.GREEN + "ACCEPT");
-        meta.setLore(Arrays.asList(ChatColor.GOLD + "Click to Change " + PlaceHolder.normalizeMaterial(type.name())));
+        meta.setLore(Arrays.asList(ChatColor.GOLD + "Click to Change " + cCrates.getPlaceHolder().normalizeMaterial(type.name())));
         stack.setItemMeta(meta);
         return stack;
     }

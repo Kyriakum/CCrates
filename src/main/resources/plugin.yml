@@ -4,3 +4,6 @@ main: kyriakum.ccrates.ccrates.CCrates
 api-version: 1.19
 commands:
   ccrates:
+permissions:
+  ccrates.admin:
+    description: Admin ccrates

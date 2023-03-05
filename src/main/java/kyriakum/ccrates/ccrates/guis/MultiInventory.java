@@ -14,6 +14,7 @@ public abstract class MultiInventory {
     private final int SIZE = 9*3;
     private Map<Integer, Inventory> inventories;
     private final String title;
+    private List<ItemStack> stacks;
 
     public MultiInventory(String title){
         this.title = ChatColor.DARK_PURPLE + title;
@@ -33,21 +34,31 @@ public abstract class MultiInventory {
         public Inventory createInventory(int page, List<ItemStack> crates) {
             Inventory inv = Bukkit.createInventory(null, SIZE, title + " - Page " + page);
             int itemcounter=0;
-            if(crates.size()==SIZE-1) {
+            if(crates.size()==SIZE-1 && page==1 && !stacks.isEmpty()) {
                 inv.setItem(26, nextPage());
                 for (int i = 0; i < inv.getSize(); i++) {
                     if (inv.getItem(i) != null) continue;
                     inv.setItem(i, crates.get(itemcounter++));
                 }
             }
-            else if(crates.size()==SIZE-2){
+            else if(crates.size()==SIZE-2 && page!=1 && !stacks.isEmpty()){
                 inv.setItem(18, previousPage());
                 inv.setItem(26, nextPage());
                 for(int i = 0; i<inv.getSize();i++){
                     if(inv.getItem(i)!=null) continue;
                     inv.setItem(i, crates.get(itemcounter++));
                 }
-            } else if(page>1){
+            } else if(page>1 && crates.size()%SIZE==0) {
+                inv.setItem(18, previousPage());
+                inv.setItem(26, nextPage());
+                for(int i = 0; i<crates.size();i++){
+                    if(inv.getItem(i)!=null) continue;
+                    inv.setItem(i, crates.get(itemcounter));
+                    crates.remove(itemcounter++);
+                }
+                createInventory(page+1, crates);
+            }
+            else if(page>1){
                 inv.setItem(18, previousPage());
                 for(int i = 0; i<crates.size();i++){
                     if(inv.getItem(i)!=null) continue;
@@ -66,7 +77,8 @@ public abstract class MultiInventory {
     protected void setupInvs() {
         int page = 1;
         inventories = new HashMap<>();
-        List<ItemStack> stacks = getInvStacks();
+        if(stacks==null) stacks = getInvStacks();
+
         while(stacks.size()>SIZE){
             List<ItemStack> thisinv = new ArrayList<>();
             if(page==1){
@@ -82,8 +94,16 @@ public abstract class MultiInventory {
             }
             inventories.put(page, createInventory(page++, thisinv));
         }
-        if(stacks.size()>=1 || page==1) inventories.put(page,createInventory(page, stacks));
-    }
+        if(stacks.size()>=1) {
+            List<ItemStack> thisinv = new ArrayList<>();
+            int size = stacks.size();
+            for(int i = 0; i<size;i++){
+                thisinv.add(stacks.get(0));
+                stacks.remove(0);
+            }
+            inventories.put(page, createInventory(page, thisinv));
+        }
+        }
 
     public ItemStack nextPage() {
         ItemStack item = new ItemStack(Material.ACACIA_SIGN);

@@ -1,10 +1,7 @@
 package kyriakum.ccrates.ccrates.events;
 
 import kyriakum.ccrates.ccrates.CCrates;
-import kyriakum.ccrates.ccrates.api.crates.CrateAnimationChangeEvent;
-import kyriakum.ccrates.ccrates.api.crates.CrateBlockChangeEvent;
-import kyriakum.ccrates.ccrates.api.crates.CrateFloorChangeEvent;
-import kyriakum.ccrates.ccrates.api.crates.CrateKeyChangeEvent;
+import kyriakum.ccrates.ccrates.api.crates.*;
 import kyriakum.ccrates.ccrates.api.instances.NewInstanceEvent;
 import kyriakum.ccrates.ccrates.api.instances.RemoveInstanceEvent;
 import org.bukkit.event.EventHandler;
@@ -47,6 +44,17 @@ public class CCratesEventsListener implements Listener {
     }
     @EventHandler
     public void onAnimationChange(CrateAnimationChangeEvent e){
+        e.getCrate().loadGUIs();
+        cCrates.reloadGUI();
+    }
+    @EventHandler
+    public void onCrateEnable(CrateEnableEvent e){
+        e.getCrate().loadGUIs();
+        cCrates.reloadGUI();
+    }
+
+    @EventHandler
+    public void onCrateDisable(CrateDisableEvent e){
         e.getCrate().loadGUIs();
         cCrates.reloadGUI();
     }

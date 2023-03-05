@@ -5,6 +5,7 @@ import kyriakum.ccrates.ccrates.events.CrateOpeningListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
@@ -52,9 +53,12 @@ public class CrateRunnable extends BukkitRunnable {
         if(counter<2) {
             new Region2D(region2D.getPos1().clone().add(2-counter,0,2-counter),
                     region2D.getPos2().clone().subtract(2-counter,0,2-counter), this).fillRegion(instance.getCrate().getFloor());
-         } else if (counter == 2){
+                    player.getWorld().playSound(playerLocation, Sound.BLOCK_WOOD_PLACE, 5, 1);
+        } else if (counter == 2){
             region2D.fillRegion(instance.getCrate().getFloor());
             region2D.clipCorners();
+            player.getWorld().playSound(playerLocation, Sound.BLOCK_WOOD_PLACE, 5, 1);
+
         } else if(counter<=6){
             entities.get(counter%4).spawn();
         } else if(counter==7) {

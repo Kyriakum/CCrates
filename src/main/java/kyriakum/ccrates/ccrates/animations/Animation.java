@@ -18,7 +18,8 @@ public abstract class Animation {
         this.delay = delay;
     }
 
-    public void setDone() { done = true; getCrateEntity().getContent().givePlayer(getCrateEntity().getPlayer());}
+    public void setDone() { done = true; getCrateEntity().getContent().givePlayer(getCrateEntity().getPlayer());
+    }
 
     public boolean isDone() {return done; }
 

@@ -17,18 +17,20 @@ public class GiveKeyCommand implements SubCommand{
     public void onCommand(Player player, String[] args) {
 
         if(args.length < 3){
-            player.sendMessage(ChatColor.RED + "Wrong syntax! /ccrates give (player) (crate)");
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "Wrong syntax! /ccrates give (player) (crate)");
             return;
         }
         Player target = Bukkit.getPlayerExact(args[1]);
         if(target==null || !target.isOnline()){
-            player.sendMessage(ChatColor.RED + "This player is not online!");
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "This player is not online!");
         } else {
             Crate crate = cCrates.getCrateManager().getCrate(args[2]);
             if(crate==null){
-                player.sendMessage(ChatColor.RED + "This crate does not exist!");
+                player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "This crate does not exist!");
             } else {
                 target.getInventory().addItem(crate.getKey());
+                player.sendMessage(cCrates.getPlaceHolder().replaceItem(cCrates.getPlaceHolder().replaceName(cCrates.getPlaceHolder().replaceCrate(cCrates.getMessagesManager().getGiveKey(), crate), target), crate.getKey()));
+                target.sendMessage(cCrates.getPlaceHolder().replaceCrate(cCrates.getPlaceHolder().replaceItem(cCrates.getMessagesManager().getKeyGivenToPlayer(), crate.getKey()), crate));
             }
         }
     }

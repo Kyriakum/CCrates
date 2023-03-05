@@ -32,13 +32,18 @@ public class SetCrateListener implements Listener {
             } else {
 
                 cCrates.getLocationManager().addCrateLocation(setCrate.get(player), block.getLocation());
-                player.sendMessage(ChatColor.GREEN + "Crate " + setCrate.get(player).getHologramName() + " was set!");
-                block.setType(setCrate.get(player).getBlock());
-                Directional ddata = (Directional) block.getBlockData();
-                ddata.setFacing(player.getFacing().getOppositeFace());
-                block.setBlockData(ddata);
+                player.sendMessage(ChatColor.GREEN + "Crate " + setCrate.get(player).getDisplayName() + " was set!");
+
+
+                    block.setType(setCrate.get(player).getBlock());
+                if(setCrate.get(player).isChest()) {
+                    Directional ddata = (Directional) block.getBlockData();
+                    ddata.setFacing(player.getFacing().getOppositeFace());
+                    block.setBlockData(ddata);
+                }
             }
             setCrate.remove(player);
+            e.setCancelled(true);
         }
     }
 }

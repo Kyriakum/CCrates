@@ -3,7 +3,6 @@ package kyriakum.ccrates.ccrates.commands;
 import kyriakum.ccrates.ccrates.CCrates;
 import kyriakum.ccrates.ccrates.entities.Crate;
 import kyriakum.ccrates.ccrates.entities.contents.Content;
-import kyriakum.ccrates.ccrates.utils.PlaceHolder;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -19,22 +18,22 @@ public class InfoCommand implements SubCommand{
     public void onCommand(Player player, String[] args) {
 
         if(args.length<2){
-            player.sendMessage(ChatColor.RED + "Wrong syntax! /ccrates info (crate)");
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "Wrong syntax! /ccrates info (crate)");
             return;
         }
 
         Crate crate = cCrates.getCrateManager().getCrate(args[1]);
         if(crate==null){
-            player.sendMessage(ChatColor.RED + "This crate does not exist!");
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "This crate does not exist!");
         } else {
-            player.sendMessage(crate.getHologramName());
-            player.sendMessage(ChatColor.GREEN + "Contents Size: " + crate.getContents().size());
-            player.sendMessage(ChatColor.GREEN + "Block: " + PlaceHolder.normalizeMaterial(crate.getBlock().name()));
-            player.sendMessage(ChatColor.GREEN + "Floor: " + PlaceHolder.normalizeMaterial(crate.getFloor().name()));
-            player.sendMessage(ChatColor.GREEN + "Key: "+ crate.getKey().getItemMeta().getDisplayName());
-            player.sendMessage(ChatColor.GREEN + "Contents: ");
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + crate.getDisplayName());
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.GRAY + "Contents Size: " + ChatColor.GOLD + crate.getContents().size());
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.GRAY + "Block: " +ChatColor.GOLD + cCrates.getPlaceHolder().normalizeMaterial(crate.getBlock().name()));
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.GRAY + "Floor: " +ChatColor.GOLD + cCrates.getPlaceHolder().normalizeMaterial(crate.getFloor().name()));
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.GRAY + "Key: "+ChatColor.GOLD + crate.getKey().getItemMeta().getDisplayName());
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.GRAY + "Contents: ");
             for(Content content : crate.getContents()){
-                player.sendMessage(ChatColor.GREEN + "Content "+ content.getContentID() + ": " + content.getContent().getItemMeta().getDisplayName());
+                player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.GRAY+ "Content "+ ChatColor.GOLD +content.getContentID() +ChatColor.GRAY+ ": " + ChatColor.GOLD + content.getContent().getItemMeta().getDisplayName());
             }
         }
 

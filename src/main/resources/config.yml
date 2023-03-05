@@ -1,6 +1,7 @@
 Crates:
   TestCrate:
-    HologramName: 'Test Crate'
+    DisplayName: 'Test Crate'
+    Enabled: true
     Block: CHEST
     Animation: STD_ANIMATION
     Floor: NETHERRITE
@@ -16,6 +17,7 @@ Crates:
         Name: 'AMAZING DIAMOND'
         Amount: 5
         Percentage: 20
+        Announce: true
         Lore:
           - 'This is the perfect diamond'
       '2':
@@ -23,6 +25,7 @@ Crates:
         Item: IRON_ORE
         Name: 'Omg command'
         Percentage: 20
+        Announce: false
         Lore:
           - 'Insane cmd'
         Commands:

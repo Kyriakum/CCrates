@@ -3,7 +3,6 @@ package kyriakum.ccrates.ccrates.guis.crateguis;
 import kyriakum.ccrates.ccrates.CCrates;
 import kyriakum.ccrates.ccrates.entities.Crate;
 import kyriakum.ccrates.ccrates.guis.crateguis.changevalueguis.*;
-import kyriakum.ccrates.ccrates.utils.PlaceHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -32,6 +31,7 @@ public class SettingsGUI {
 
     public void setupInv(){
         settings = Bukkit.createInventory(null, SIZE, ChatColor.DARK_PURPLE + crate.getName() + " Settings");
+        settings.setItem(4, enabledStack());
         settings.setItem(9,blockStack());
         settings.setItem(11,floorStack());
         settings.setItem(13,keyStack());
@@ -54,7 +54,7 @@ public class SettingsGUI {
     public ItemStack blockStack(){
         ItemStack stack = new ItemStack(crate.getBlock());
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(ChatColor.GRAY + "Current Block: " + ChatColor.GOLD + PlaceHolder.normalizeMaterial(crate.getBlock().name()));
+        meta.setDisplayName(ChatColor.GRAY + "Current Block: " + ChatColor.GOLD + cCrates.getPlaceHolder().normalizeMaterial(crate.getBlock().name()));
         meta.setLore(Arrays.asList(ChatColor.GOLD + "Click Here to Change!"));
         stack.setItemMeta(meta);
         return stack;
@@ -63,7 +63,7 @@ public class SettingsGUI {
     public ItemStack floorStack(){
         ItemStack stack = new ItemStack(crate.getFloor());
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(ChatColor.GRAY + "Current Floor: " +ChatColor.GOLD +  PlaceHolder.normalizeMaterial(crate.getFloor().name()));
+        meta.setDisplayName(ChatColor.GRAY + "Current Floor: " +ChatColor.GOLD +  cCrates.getPlaceHolder().normalizeMaterial(crate.getFloor().name()));
         meta.setLore(Arrays.asList(ChatColor.GOLD + "Click Here to Change!"));
         stack.setItemMeta(meta);
         return stack;
@@ -82,6 +82,17 @@ public class SettingsGUI {
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName(ChatColor.GRAY + "Current Animation: " +ChatColor.GOLD +  crate.getAnimationType().getDisplayName());
         meta.setLore(Arrays.asList(ChatColor.GOLD + "Click Here to Change!"));
+        stack.setItemMeta(meta);
+        return stack;
+    }
+
+    public ItemStack enabledStack(){
+        Material enabled = (crate.isEnabled()) ? Material.GREEN_WOOL : Material.RED_WOOL;
+        ItemStack stack = new ItemStack(enabled);
+        ItemMeta meta = stack.getItemMeta();
+        String enabledstr = (crate.isEnabled()) ? ChatColor.GREEN + "Enabled" : ChatColor.RED + "Disabled";
+        meta.setDisplayName(ChatColor.GRAY + "Current State: " + enabledstr);
+        meta.setLore(Arrays.asList(ChatColor.GOLD + "Click here to Change!"));
         stack.setItemMeta(meta);
         return stack;
     }

@@ -16,25 +16,25 @@ public class RemoveCommand implements SubCommand{
     @Override
     public void onCommand(Player player, String[] args) {
         if(args.length<3){
-            player.sendMessage(ChatColor.RED + "Wrong syntax: /ccrates remove (crate) (content ID)");
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "Wrong syntax: /ccrates remove (crate) (content ID)");
             return;
         }
         Crate crate = cCrates.getCrateManager().getCrate(args[1]);
         if(crate==null){
-            player.sendMessage(ChatColor.RED + "This crate does not exist!");
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "This crate does not exist!");
         } else {
            int id = 0;
             try{
                 id = Integer.valueOf(args[2]);
             }catch (NumberFormatException e){
-                player.sendMessage(ChatColor.RED + "Your input was not a number!");
+                player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "Your input was not a number!");
                 return;
             }
             if(crate.getContent(id)!=null){
-                player.sendMessage(crate.getContent(id).getContent().getItemMeta().getDisplayName() + ChatColor.GREEN + " was successfully removed!");
+                player.sendMessage(cCrates.getPlaceHolder().replaceItem(cCrates.getMessagesManager().getContentRemoved(), crate.getContent(id).getContent()));
                 cCrates.getConfigManager().removeContent(crate,id);
             } else {
-                player.sendMessage(ChatColor.RED + "This content ID does not exist!");
+                player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "This content ID does not exist!");
             }
         }
     }

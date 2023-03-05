@@ -15,7 +15,7 @@ public class CreateCommand implements SubCommand {
     @Override
     public void onCommand(Player player, String[] args) {
         if(args.length<2){
-            player.sendMessage(ChatColor.RED + "Wrong syntax: /ccrates create (crate)");
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "Wrong syntax: /ccrates create (crate)");
             return;
         }
 
@@ -25,10 +25,10 @@ public class CreateCommand implements SubCommand {
         }
         Crate crate = cCrates.getCrateManager().getCrate(builder.toString());
         if(crate!=null){
-            player.sendMessage(ChatColor.RED + "This crate already exists!");
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "This crate already exists!");
         } else {
             cCrates.getConfigManager().createCrate(builder.toString());
-            player.sendMessage(ChatColor.GREEN + "Crate " + builder.toString() + " was successfully created!");
+            player.sendMessage(cCrates.getPlaceHolder().replaceCrate(cCrates.getMessagesManager().getCrateCreated(), builder.toString()));
         }
     }
 

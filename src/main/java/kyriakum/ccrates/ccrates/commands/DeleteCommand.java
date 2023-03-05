@@ -15,7 +15,7 @@ public class DeleteCommand implements SubCommand {
     @Override
     public void onCommand(Player player, String[] args) {
         if(args.length<2){
-            player.sendMessage(ChatColor.RED + "Wrong syntax: /ccrates delete (crate)");
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "Wrong syntax: /ccrates delete (crate)");
             return;
         }
 
@@ -25,11 +25,11 @@ public class DeleteCommand implements SubCommand {
         }
         Crate crate = cCrates.getCrateManager().getCrate(builder.toString());
         if(crate==null){
-            player.sendMessage(ChatColor.RED + "This crate doesn't exist!");
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "This crate doesn't exist!");
         } else {
             cCrates.getConfigManager().deleteCrate(crate);
             cCrates.getLocationManager().removeAllCrateLocations(crate);
-            player.sendMessage(ChatColor.GREEN + "Crate " + builder.toString() + " was successfully deleted!");
+            player.sendMessage(cCrates.getPlaceHolder().replaceCrate(cCrates.getMessagesManager().getCrateRemoved(), builder.toString()));
         }
     }
 

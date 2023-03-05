@@ -12,32 +12,34 @@ import java.util.List;
 public class Crate {
 
     private String name;
-    private String hologramName;
+    private String displayName;
     private ItemStack key;
     private Material block;
     private Material floor;
     private List<Content> contents;
     private AnimationType type;
+    private boolean enabled;
     private CrateMenuGUI menuGUI;
     private final CCrates cCrates;
 
-    public Crate(CCrates cCrates, String name, String hologramName, ItemStack key, Material block, Material floor, List<Content> contents, AnimationType type){
+    public Crate(CCrates cCrates, String name, String displayName, ItemStack key, Material block, Material floor, List<Content> contents, AnimationType type, boolean enabled){
         this.cCrates = cCrates;
         this.name = name;
-        this.hologramName = hologramName;
+        this.displayName = displayName;
         this.key = key;
         this.type = type;
         this.block = block;
         this.floor = floor;
         this.contents = contents;
+        this.enabled = enabled;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getHologramName() {
-        return hologramName;
+    public String getDisplayName() {
+        return displayName;
     }
 
     public ItemStack getKey() {
@@ -104,5 +106,19 @@ public class Crate {
     public boolean isChest(){
         if(getBlock().name().contains("CHEST")) return true;
         return false;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public boolean enable(){
+        if(enabled) return false;
+        return enabled = true;
+    }
+
+    public boolean disable(){
+        if(!enabled) return false;
+        return !(enabled = false);
     }
 }

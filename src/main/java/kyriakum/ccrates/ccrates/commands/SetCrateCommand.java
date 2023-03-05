@@ -18,11 +18,11 @@ public class SetCrateCommand implements SubCommand{
     @Override
     public void onCommand(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage(ChatColor.RED + "Wrong syntax: " + "/ccrates set (crate)");
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "Wrong syntax: " + "/ccrates set (crate)");
             return;
         }
         if (SetCrateListener.setCrate.containsKey(player)){
-            player.sendMessage(ChatColor.RED + "You are already setting a crate!");
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "You are already setting a crate!");
             return;
         }
 
@@ -30,17 +30,17 @@ public class SetCrateCommand implements SubCommand{
             Crate crate = cCrates.getCrateManager().getCrate(crateName);
 
         if(crate == null){
-            player.sendMessage(ChatColor.RED + "This crate does not exist!");
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "This crate does not exist!");
             return;
         }
 
         if(crate.getContents().size()==0) {
-            player.sendMessage(ChatColor.RED + "This crate has no contents!");
+            player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.RED + "This crate has no contents!");
             return;
         }
 
         SetCrateListener.setCrate.put(player, crate);
-        player.sendMessage(ChatColor.GREEN + "Right Click a block to set it as a " + crate.getHologramName());
+        player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.GREEN + "Right Click a block to set it as a " + crate.getDisplayName());
     }
 
     @Override

@@ -10,10 +10,10 @@ import kyriakum.ccrates.ccrates.entities.contents.CmdContent;
 import kyriakum.ccrates.ccrates.entities.contents.Content;
 import kyriakum.ccrates.ccrates.entities.contents.ItemContent;
 import kyriakum.ccrates.ccrates.guis.crateguis.changevalueguis.ChangeValueType;
-import kyriakum.ccrates.ccrates.utils.PlaceHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -42,22 +42,23 @@ public class ConfigManager extends FileManager {
     }
     public Crate loadCrate(String name){
         if(getConfig().get("Crates." + name) == null) return null;
-        String hologramName = PlaceHolder.alternateColors(getConfig().getString("Crates." + name + ".HologramName"));
+        String displayName = getCCrates().getPlaceHolder().alternateColors(getConfig().getString("Crates." + name + ".DisplayName"));
         Material block = Material.matchMaterial(getConfig().getString("Crates." + name + ".Block"));
         Material floor = Material.matchMaterial(getConfig().getString("Crates." + name + ".Floor"));
+        boolean enabled = getConfig().getBoolean("Crates." + name + ".Enabled");
         AnimationType type = AnimationType.valueOf(getConfig().getString("Crates." + name + ".Animation"));
         ItemStack key = loadKeyItem("Crates."+name+".Key");
         List<Content> contents = loadContents("Crates."+name+".Items");
-        return new Crate(getCCrates(),name, hologramName, key, block, floor, contents, type);
+        return new Crate(getCCrates(),name, displayName, key, block, floor, contents, type, enabled);
     }
 
     private ItemStack loadKeyItem(String path){
         ItemStack key = new ItemStack(Material.matchMaterial(getConfig().getString(path+".Item")));
         ItemMeta meta = key.getItemMeta();
-        meta.setDisplayName(PlaceHolder.alternateColors(getConfig().getString(path+".Name")));
+        meta.setDisplayName(getCCrates().getPlaceHolder().alternateColors(getConfig().getString(path+".Name")));
         List<String> lore = new ArrayList<>();
         if(getConfig().getList(path+".Lore")!=null) for(String string: (List<String>) getConfig().getList(path+".Lore")){
-            lore.add(PlaceHolder.alternateColors(string));
+            lore.add(getCCrates().getPlaceHolder().alternateColors(string));
         }
         meta.setLore(lore);
         key.setItemMeta(meta);
@@ -88,8 +89,8 @@ public class ConfigManager extends FileManager {
         ItemStack stack = loadKeyItem(path);
         int amount = getConfig().getInt(path + ".Amount");
         int perc = getConfig().getInt(path + ".Percentage");
-
-        return new ItemContent(id, stack, perc, amount);
+        boolean announce = getConfig().getBoolean(path + ".Announce");
+        return new ItemContent(getCCrates(), id, stack, perc, amount, announce);
     }
 
     private CmdContent loadCmdContent(String path, int id){
@@ -97,8 +98,8 @@ public class ConfigManager extends FileManager {
         List<String> cmds = new ArrayList<>();
         if(getConfig().getList(path+".Commands")!=null) cmds = (List<String>) getConfig().getList(path+".Lore");
         int perc = getConfig().getInt(path + ".Percentage");
-
-        return new CmdContent(id, stack, perc, cmds);
+        boolean announce = getConfig().getBoolean(path + ".Announce");
+        return new CmdContent(getCCrates(), id, stack, perc, cmds, announce);
     }
 
 
@@ -112,8 +113,8 @@ public class ConfigManager extends FileManager {
             getConfig().set("Crates." + crate.getName() + ".Items." + String.valueOf(id) + ".Name", itemStack.getItemMeta().getDisplayName());
             getConfig().set("Crates." + crate.getName() + ".Items." + String.valueOf(id) + ".Amount", itemStack.getAmount());
             getConfig().set("Crates." + crate.getName() + ".Items." + String.valueOf(id) + ".Percentage", 20);
+            getConfig().set("Crates." + crate.getName() + ".Items." + String.valueOf(id) + ".Announce", false);
             getConfig().set("Crates." + crate.getName() + ".Items." + String.valueOf(id) + ".Lore", itemStack.getItemMeta().getLore());
-
             getConfig().save(getFile());
             Content content = loadItemContent("Crates." + crate.getName() + ".Items." + String.valueOf(id), id);
             System.out.println(itemStack.getType());
@@ -137,10 +138,11 @@ public class ConfigManager extends FileManager {
             getConfig().set("Crates." + crate.getName() + ".Items." + id + ".Item", itemStack.getType().name());
             getConfig().set("Crates." + crate.getName() + ".Items." + id + ".Name", itemStack.getItemMeta().getDisplayName());
             getConfig().set("Crates." + crate.getName() + ".Items." + id + ".Percentage", 20);
+            getConfig().set("Crates." + crate.getName() + ".Items." + String.valueOf(id) + ".Announce", false);
             getConfig().set("Crates." + crate.getName() + ".Items." + id + ".Lore", itemStack.getItemMeta().getLore());
             getConfig().set("Crates." + crate.getName() + ".Items." + id + ".Commands", "");
             getConfig().save(getFile());
-            Content content = new CmdContent(id, itemStack, 20, new ArrayList<>());
+            Content content = loadCmdContent("Crates." + crate.getName() + ".Items." + id, id);
             crate.addContent(content);
 
             AddContentEvent e= new AddContentEvent(crate, content);
@@ -168,10 +170,11 @@ public class ConfigManager extends FileManager {
     }
 
     public void createCrate(String name){
-        Crate crate = new Crate(getCCrates(), name, name, new ItemStack(Material.TRIPWIRE_HOOK), Material.CHEST, Material.STONE, new ArrayList<>(), AnimationType.STD_ANIMATION);
+        Crate crate = new Crate(getCCrates(), name, name, new ItemStack(Material.TRIPWIRE_HOOK), Material.CHEST, Material.STONE, new ArrayList<>(), AnimationType.STD_ANIMATION, false);
 
         try {
-            getConfig().set("Crates." + name  + ".HologramName", name);
+            getConfig().set("Crates." + name  + ".DisplayName", name);
+            getConfig().set("Crates." + name  + ".Enabled", false);
             getConfig().set("Crates." + name  + ".Block", "CHEST");
             getConfig().set("Crates." + name  + ".Animation", "STD_ANIMATION");
             getConfig().set("Crates." + name  + ".Floor", "STONE");
@@ -187,6 +190,25 @@ public class ConfigManager extends FileManager {
         }
 
 
+    }
+
+    public void changeEnabled(Crate crate){
+        try {
+            Event e;
+        if(crate.isEnabled()){
+            getConfig().set("Crates." + crate.getName() + ".Enabled", false);
+            crate.disable();
+            e = new CrateDisableEvent(crate);
+        } else {
+            getConfig().set("Crates." + crate.getName() + ".Enabled", true);
+            crate.enable();
+            e = new CrateEnableEvent(crate);
+        }
+        Bukkit.getPluginManager().callEvent(e);
+            getConfig().save(getFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public boolean deleteCrate(Crate crate){

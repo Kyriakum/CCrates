@@ -2,6 +2,7 @@ package kyriakum.ccrates.ccrates.commands;
 
 import kyriakum.ccrates.ccrates.CCrates;
 import kyriakum.ccrates.ccrates.entities.Crate;
+import kyriakum.ccrates.ccrates.utils.PlaceHolder;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
@@ -15,9 +16,9 @@ public class ListCommand implements SubCommand{
     }
     @Override
     public void onCommand(Player player, String[] args) {
-        player.sendMessage(ChatColor.GREEN + "ALL CRATES ARE: ");
+        player.sendMessage(cCrates.getMessagesManager().getPrefix() + ChatColor.GREEN + "ALL CRATES ARE: ");
         for(Crate crate : cCrates.getCrateManager().getCrates()){
-            player.sendMessage(crate.getHologramName());
+            player.sendMessage(ChatColor.GOLD + crate.getDisplayName());
         }
     }
 

@@ -1,16 +1,12 @@
 package kyriakum.ccrates.ccrates.guis.crateguis.changevalueguis;
 
-import kyriakum.ccrates.ccrates.animations.AnimationType;
 import kyriakum.ccrates.ccrates.entities.Crate;
 import kyriakum.ccrates.ccrates.entities.contents.Content;
 import kyriakum.ccrates.ccrates.guis.MultiInventory;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 

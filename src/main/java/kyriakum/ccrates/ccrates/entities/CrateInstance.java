@@ -20,13 +20,16 @@ public class CrateInstance {
         this.id = id;
     }
 
-    public void startCrate(Player player){
+    public boolean startCrate(Player player){
+        if(!crate.isEnabled()) return false;
         running = new CrateRunnable(player, this);
         state = CrateState.IN_USE;
         player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount()-1);
 
         PlayerOpenCrateEvent e = new PlayerOpenCrateEvent(player, this);
         Bukkit.getPluginManager().callEvent(e);
+        return true;
+
     }
 
     public Location getLocation() {

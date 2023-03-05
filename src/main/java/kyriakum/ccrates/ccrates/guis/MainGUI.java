@@ -2,11 +2,7 @@ package kyriakum.ccrates.ccrates.guis;
 
 import kyriakum.ccrates.ccrates.CCrates;
 import kyriakum.ccrates.ccrates.entities.Crate;
-import kyriakum.ccrates.ccrates.utils.PlaceHolder;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -38,7 +34,7 @@ public class MainGUI extends MultiInventory {
         meta.setLore(Arrays.asList(
                 ChatColor.GOLD + "Click to change " +ChatColor.GOLD +  crate.getName(),
                 ChatColor.GRAY + "Contents: " +ChatColor.GOLD +  crate.getContents().size(),
-                ChatColor.GRAY + "Floor: " +ChatColor.GOLD +  PlaceHolder.normalizeMaterial(crate.getFloor().name()),
+                ChatColor.GRAY + "Floor: " +ChatColor.GOLD +  cCrates.getPlaceHolder().normalizeMaterial(crate.getFloor().name()),
                 ChatColor.GRAY + "Key: " + ChatColor.GOLD + crate.getKey().getItemMeta().getDisplayName(),
                 ChatColor.GRAY + "Live Instances: " + ChatColor.GOLD + cCrates.getLocationManager().getCrateInstances(crate).size()));
         item.setItemMeta(meta);
