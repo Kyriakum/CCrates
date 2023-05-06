@@ -9,13 +9,21 @@ CCrates is a plugin where you can create your own Custom Crates and include amaz
 ## Commands
 
 /ccrates set (crate) **Right Click afterwards on a block to set the crate**
+
 /ccrates give (player) (crate) **Gives key of the crate typed**
+
 /ccrates list **Lists all the crates**
+
 /ccrates info (crate) **Gives info of a crate**
+
 /ccrates add (crate) (item/cmd) **Add a content to the crate (Either Item Content or Command Content)**
+
 /ccrates remove (crate) (content ID) **Remove a specific content from the crate**
+
 /ccrates create (crate id) **Create a new crate**
+
 /ccrates delete (crate id) **Delete a crate**
+
 /ccrates reload **Reload the plugin**
 
 ## How To Setup
