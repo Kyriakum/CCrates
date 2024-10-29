@@ -37,9 +37,7 @@ After adding the plugin to the server and restarting the server:
 
 ## Credits
 
-I, Kyriakum, am the author of this plugin. 
-Please make sure to take a look at my **Fiverr Page**
-https://www.fiverr.com/kyriakos5/make-a-minecraft-plugin-for-you
+I, Kyriakum, am the author of this plugin.
 
 If you'd like any sort of collaboration:
 Discord: **Kyriakum#7736**
